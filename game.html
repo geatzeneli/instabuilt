@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstaBuilt Game</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:'Inter',-apple-system,sans-serif}
+canvas{display:block}
+#ui{position:fixed;top:16px;left:16px;z-index:10;display:flex;gap:10px;align-items:center}
+#back{color:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:8px 14px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;transition:all .2s}
+#back:hover{background:rgba(255,255,255,0.08)}
+#info{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:10;color:rgba(255,255,255,0.4);font-size:11px;letter-spacing:0.5px}
+</style>
+</head>
+<body>
+<div id="ui">
+  <a href="index.html" id="back">← Back to InstaBuilt</a>
+</div>
+<div id="info">InstaBuilt Game — Coming Soon</div>
+<script>
+(function(){
+var canvas=document.createElement('canvas');
+document.body.appendChild(canvas);
+var ctx=canvas.getContext('2d');
+var W,H;
+
+function resize(){
+  W=canvas.width=window.innerWidth;
+  H=canvas.height=window.innerHeight;
+}
+resize();
+window.addEventListener('resize',resize);
+
+// Particle grid background
+var pts=[];
+for(var i=0;i<60;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*0.3,vy:(Math.random()-.5)*0.3,r:Math.random()*1.5+.5});
+
+function draw(){
+  ctx.fillStyle='#0a0a0a';
+  ctx.fillRect(0,0,W,H);
+  
+  // Particles
+  for(var i=0;i<pts.length;i++){
+    var p=pts[i];
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+    if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(59,155,85,'+(p.r/6)+')';
+    ctx.fill();
+  }
+  // Connections
+  for(var j=0;j<pts.length;j++){
+    for(var k=j+1;k<pts.length;k++){
+      var dx=pts[j].x-pts[k].x,dy=pts[j].y-pts[k].y;
+      var dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){
+        ctx.beginPath();
+        ctx.moveTo(pts[j].x,pts[j].y);
+        ctx.lineTo(pts[k].x,pts[k].y);
+        ctx.strokeStyle='rgba(59,155,85,'+(0.04*(1-dist/120))+')';
+        ctx.lineWidth=0.3;
+        ctx.stroke();
+      }
+    }
+  }
+  
+  // Center text
+  var time=Date.now()*0.001;
+  var alpha=0.5+Math.sin(time)*0.15;
+  ctx.fillStyle='rgba(255,255,255,'+alpha+')';
+  ctx.font='bold 28px Inter,-apple-system,sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('🏗️ Game Loading...',W/2,H/2);
+  ctx.font='13px Inter,-apple-system,sans-serif';
+  ctx.fillStyle='rgba(255,255,255,0.3)';
+  ctx.fillText('Step by step — we\'ll build this together',W/2,H/2+36);
+  ctx.textAlign='start';
+  
+  requestAnimationFrame(draw);
+}
+draw();
+})();
+</script>
+</body>
+</html>

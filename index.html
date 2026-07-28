@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InstaBuilt — Modular Construction</title>
+<title>InstaBuilt ; Modular Construction</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0A0A0A;--bg2:#111113;--b:rgba(255,255,255,0.06);--b2:rgba(255,255,255,0.10);--t:#EDEDEF;--t2:#9898A0;--t3:#6B6B75;--a:#3B9B55;--r:8px;--mw:1160px}
@@ -17,7 +17,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 24px;height:54px;d
 nav a{color:#fff;font-size:12px;font-weight:500;transition:opacity .2s}nav a:hover{opacity:0.7}
 .nav-logo{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
 .nav-logo svg{width:20px;height:20px}.nav-logo svg path{fill:var(--a)}
-.nav-links{display:flex;gap:20px;font-size:11.5px}
+.nav-links{display:flex;gap:20px;font-size:11.5px;align-items:center}
+.nav-game{background:var(--a)!important;color:#fff!important;padding:6px 13px;border-radius:5px;font-weight:700;font-size:11px;letter-spacing:0.3px;box-shadow:0 0 14px rgba(59,155,85,0.35);transition:all .25s}.nav-game:hover{opacity:1!important;filter:brightness(1.2);box-shadow:0 0 22px rgba(59,155,85,0.55);transform:translateY(-1px)}
+.lang-btn{font-size:10.5px;font-weight:600;padding:5px 12px;border:1px solid var(--a);border-radius:4px;color:var(--a);transition:all .25s}.lang-btn:hover{background:var(--a);color:#fff}
 @media(max-width:800px){.nav-links{display:none}}
 
 .sl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--a);margin-bottom:10px}
@@ -25,6 +27,7 @@ nav a{color:#fff;font-size:12px;font-weight:500;transition:opacity .2s}nav a:hov
 .sp{font-size:15px;color:var(--t2);line-height:1.6;max-width:600px}
 
 .hero{min-height:85vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:54px}
+.hero-bg{position:absolute;inset:0;background:url(https://www.instabuilt.com/images/home/popup-exterior-night.jpg) center/cover no-repeat;opacity:0.35;filter:brightness(0.6)}.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,10,10,0.8) 0%,rgba(10,10,10,0.5) 50%,rgba(10,10,10,0.8) 100%);pointer-events:none}
 .hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(59,155,85,0.05),transparent 70%);top:50%;right:5%;transform:translateY(-50%);pointer-events:none}
 .hero-inner{max-width:var(--mw);margin:0 auto;padding:0 24px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center;position:relative;z-index:2}
 .hero h1{font-size:clamp(38px,7vw,72px);font-weight:900;letter-spacing:-0.04em;line-height:0.92;margin-bottom:14px;color:#fff}
@@ -74,7 +77,8 @@ nav a{color:#fff;font-size:12px;font-weight:500;transition:opacity .2s}nav a:hov
 .faq-a p{padding:0 18px 14px;font-size:12.5px;color:var(--t2);line-height:1.65}
 
 .pj{height:80vh;min-height:460px;display:flex;align-items:center;position:relative;overflow:hidden}
-.pjbg{position:absolute;inset:0;background:linear-gradient(160deg,#0d1a0d,#0a140a,#0a0a0a)}
+.pj::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.55);pointer-events:none;z-index:1}
+.pjbg{position:absolute;inset:0}
 .pjc{position:relative;z-index:2;max-width:var(--mw);margin:0 auto;padding:0 24px;width:100%}
 .pjt{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--a);margin-bottom:12px}
 .pj h2{font-size:clamp(26px,5vw,52px);font-weight:900;letter-spacing:-0.03em;line-height:1;margin-bottom:8px;max-width:480px}
@@ -98,12 +102,13 @@ footer a{display:block;font-size:11px;color:var(--t3);padding:2px 0}footer a:hov
 <nav>
   <div class="nav-inner" style="max-width:var(--mw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;width:100%">
     <a href="#" class="nav-logo"><svg viewBox="0 0 31 31"><path fill-rule="evenodd" d="M0 0H31V31H0V0ZM24.9 13.2L18.7 16.8V23L12.5 26.6V14.2L6.3 10.6V4.3L12.5 7.9V14.1L18.7 10.5L24.9 7V13.2Z"/></svg>InstaBuilt</a>
-    <div class="nav-links"><a href="#about">About</a><a href="#advantages">Why Modular</a><a href="#process">Process</a><a href="#solutions">Solutions</a><a href="#innovation">Innovation</a><a href="#sustainability">Sustainability</a><a href="#projects">Projects</a><a href="#contact">Contact</a></div>
+    <div class="nav-links"><a href="game.html" class="nav-game">🎮 Play</a><a href="#about">About</a><a href="#advantages">Why Modular</a><a href="#process">Process</a><a href="#solutions">Solutions</a><a href="#innovation">Innovation</a><a href="#sustainability">Sustainability</a><a href="#projects">Projects</a><a href="#contact">Contact</a><button class="lang-btn" id="lang-toggle">Shqip</button></div>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero" id="hero">
+  <div class="hero-bg"></div>
   <div class="hero-glow"></div>
   <div class="hero-inner">
     <div>
@@ -142,9 +147,9 @@ footer a{display:block;font-size:11px;color:var(--t3);padding:2px 0}footer a:hov
     <div class="card"><div class="cs">50%</div><h4>Faster Project Delivery</h4><p>Parallel factory production and site preparation cut total project timelines in half. An 18-month traditional build becomes 9 months with modular. Weather delays eliminated. Occupancy begins sooner. Financing costs reduced.</p></div>
     <div class="card"><div class="cs">±2mm</div><h4>Factory Precision Engineering</h4><p>Every module manufactured to exacting tolerances in controlled indoor conditions. No weather exposure. No site variability. Automated quality gates at every production station ensure standards traditional methods cannot match.</p></div>
     <div class="card"><div class="cs">90%</div><h4>Construction Waste Reduction</h4><p>Factory-based manufacturing eliminates material waste endemic to site work. Precision cutting optimizes every sheet. Off-cuts recycled or repurposed. Verified waste reduction of up to 90% compared to conventional construction.</p></div>
-    <div class="card"><div class="cs">KfW 40</div><h4>German Energy Certification</h4><p>Buildings meet the rigorous KfW 40 standard — consuming 60% less primary energy than legally required. Superior insulation, airtight construction, and thermal-bridge-free detailing reduce lifetime operational costs.</p></div>
+    <div class="card"><div class="cs">KfW 40</div><h4>German Energy Certification</h4><p>Buildings meet the rigorous KfW 40 standard ; consuming 60% less primary energy than legally required. Superior insulation, airtight construction, and thermal-bridge-free detailing reduce lifetime operational costs.</p></div>
     <div class="card"><div class="cs">100%</div><h4>Eco, Bio &amp; Green Materials</h4><p>Bio-based insulation from renewable plant fibers. FSC-certified structural timber. Non-toxic interior finishes with zero VOC emissions. Every material documented, certified, and traceable from source to site.</p></div>
-    <div class="card"><div class="cs">Infinite</div><h4>Scalability Without Compromise</h4><p>From a single 28 m² unit to a 200-unit multistory complex — one system, one standard, one supply chain. Add modules horizontally. Stack vertically. The system adapts to any vision, any site.</p></div>
+    <div class="card"><div class="cs">Infinite</div><h4>Scalability Without Compromise</h4><p>From a single 28 m² unit to a 200-unit multistory complex ; one system, one standard, one supply chain. Add modules horizontally. Stack vertically. The system adapts to any vision, any site.</p></div>
   </div>
 </div></section>
 
@@ -152,28 +157,28 @@ footer a{display:block;font-size:11px;color:var(--t3);padding:2px 0}footer a:hov
 <section class="sec" id="process" style="border-top:1px solid var(--b)"><div class="con">
   <div class="sl">The InstaBuilt Process</div>
   <h2 class="sh2">From concept to completion in four proven phases</h2>
-  <p class="sp" style="margin-bottom:16px">Every project follows a rigorously tested methodology that eliminates uncertainty, compresses schedules, and delivers on time — every time.</p>
+  <p class="sp" style="margin-bottom:16px">Every project follows a rigorously tested methodology that eliminates uncertainty, compresses schedules, and delivers on time ; every time.</p>
   <div class="timeline">
-    <div class="tl-step"><h4>01 — Design &amp; Engineering</h4><p>We collaborate with your architects to optimize plans for modular delivery. Structural calculations, MEP integration, and material selection are finalized before production begins — eliminating costly change orders. Every load path, connection, and tolerance is engineered to precision.</p></div>
-    <div class="tl-step"><h4>02 — Manufacturing</h4><p>Modules enter our controlled production facility where walls, floors, ceilings, windows, doors, and finishes are assembled under strict quality gates. Automated systems ensure consistent tolerances. Every module undergoes full inspection — structural, electrical, plumbing — before certification for departure.</p></div>
-    <div class="tl-step"><h4>03 — Transport &amp; Logistics</h4><p>Completed modules are wrapped, sealed, and loaded. We manage the entire logistics chain — route optimization, permits, customs clearance, escort vehicles. Consolidated deliveries reduce both cost and carbon. Modules tracked from factory gate to site.</p></div>
-    <div class="tl-step"><h4>04 — On-Site Assembly</h4><p>Cranes position modules onto prepared foundations. Crews connect structural ties, seal joints, and commission utilities. A multistory building weather-tight in days. Interior finishing and site work proceed in parallel. From foundation to handover — predictable, reliable, fast.</p></div>
+    <div class="tl-step"><h4>01 ; Design &amp; Engineering</h4><p>We collaborate with your architects to optimize plans for modular delivery. Structural calculations, MEP integration, and material selection are finalized before production begins ; eliminating costly change orders. Every load path, connection, and tolerance is engineered to precision.</p></div>
+    <div class="tl-step"><h4>02 ; Manufacturing</h4><p>Modules enter our controlled production facility where walls, floors, ceilings, windows, doors, and finishes are assembled under strict quality gates. Automated systems ensure consistent tolerances. Every module undergoes full inspection ; structural, electrical, plumbing ; before certification for departure.</p></div>
+    <div class="tl-step"><h4>03 ; Transport &amp; Logistics</h4><p>Completed modules are wrapped, sealed, and loaded. We manage the entire logistics chain ; route optimization, permits, customs clearance, escort vehicles. Consolidated deliveries reduce both cost and carbon. Modules tracked from factory gate to site.</p></div>
+    <div class="tl-step"><h4>04 ; On-Site Assembly</h4><p>Cranes position modules onto prepared foundations. Crews connect structural ties, seal joints, and commission utilities. A multistory building weather-tight in days. Interior finishing and site work proceed in parallel. From foundation to handover ; predictable, reliable, fast.</p></div>
   </div>
 </div></section>
 
 <!-- SOLUTIONS -->
 <section class="sec" id="solutions" style="border-top:1px solid var(--b)"><div class="con">
   <div class="sl">Solutions</div>
-  <h2 class="sh2">Seven product lines — one system, infinite configurations</h2>
-  <p class="sp" style="margin-bottom:16px">From standalone homes to multistory urban developments. Same factory precision, same sustainability standards, same quality — at any scale.</p>
+  <h2 class="sh2">Seven product lines ; one system, infinite configurations</h2>
+  <p class="sp" style="margin-bottom:16px">From standalone homes to multistory urban developments. Same factory precision, same sustainability standards, same quality ; at any scale.</p>
   <div class="cg">
-    <div class="card"><div class="cs">28–104</div><h4>POP UP Solutions</h4><p>Standalone modular homes in three sizes: 28, 52, and 104 m². Fully finished interiors — premium kitchen, bathroom, flooring, energy systems pre-installed. Move-in ready within weeks. Residential, hospitality, remote workforce.</p></div>
+    <div class="card"><div class="cs">28–104</div><h4>POP UP Solutions</h4><p>Standalone modular homes in three sizes: 28, 52, and 104 m². Fully finished interiors ; premium kitchen, bathroom, flooring, energy systems pre-installed. Move-in ready within weeks. Residential, hospitality, remote workforce.</p></div>
     <div class="card"><div class="cs">Up to 12</div><h4>Multistory-Multifamily</h4><p>Mid to high-rise residential on hybrid steel-and-timber structure supporting up to 12 stories. Each apartment factory-finished and stacked on site. Urban-density buildings in months instead of years.</p></div>
-    <div class="card"><div class="cs">100%</div><h4>Senior Housing</h4><p>Accessibility-first design — wide doorways, zero-step entries, slip-resistant surfaces, emergency call integration. Private apartments with shared community spaces. Dignity, safety, independence built in from the ground up.</p></div>
+    <div class="card"><div class="cs">100%</div><h4>Senior Housing</h4><p>Accessibility-first design ; wide doorways, zero-step entries, slip-resistant surfaces, emergency call integration. Private apartments with shared community spaces. Dignity, safety, independence built in from the ground up.</p></div>
     <div class="card"><div class="cs">25–35</div><h4>Micro Apartments</h4><p>Compact urban living through intelligent spatial design. High ceilings, large windows, integrated storage, full kitchens and bathrooms. Every centimeter optimized. Ideal for city-center developments targeting young professionals.</p></div>
-    <div class="card"><div class="cs">Classic</div><h4>Traditional Homes</h4><p>European and American residential architecture reimagined for modular. Pitched roofs, brick facades, bay windows, porches — all the character of traditional homes with factory precision and modern speed.</p></div>
-    <div class="card"><div class="cs">Bespoke</div><h4>Signature Homes</h4><p>Custom architectural residences — unique geometries, premium natural materials, cantilevered volumes. The modular system handles complexity that sends traditional budgets spiraling. Bespoke architecture, delivered predictably.</p></div>
-    <div class="card"><div class="cs">Zero</div><h4>Bathpods</h4><p>Complete factory-finished bathrooms — plumbing, tiling, waterproofing, fixtures, lighting, ventilation — all pre-installed and pressure-tested. Delivered sealed, connected in hours. Eliminates the highest-risk trade from your schedule entirely.</p></div>
+    <div class="card"><div class="cs">Classic</div><h4>Traditional Homes</h4><p>European and American residential architecture reimagined for modular. Pitched roofs, brick facades, bay windows, porches ; all the character of traditional homes with factory precision and modern speed.</p></div>
+    <div class="card"><div class="cs">Bespoke</div><h4>Signature Homes</h4><p>Custom architectural residences ; unique geometries, premium natural materials, cantilevered volumes. The modular system handles complexity that sends traditional budgets spiraling. Bespoke architecture, delivered predictably.</p></div>
+    <div class="card"><div class="cs">Zero</div><h4>Bathpods</h4><p>Complete factory-finished bathrooms ; plumbing, tiling, waterproofing, fixtures, lighting, ventilation ; all pre-installed and pressure-tested. Delivered sealed, connected in hours. Eliminates the highest-risk trade from your schedule entirely.</p></div>
   </div>
 </div></section>
 
@@ -183,10 +188,10 @@ footer a{display:block;font-size:11px;color:var(--t3);padding:2px 0}footer a:hov
   <h2 class="sh2">5,700 m² dedicated entirely to the future of construction</h2>
   <p class="sp" style="margin-bottom:16px">A purpose-built facility where industry leaders, academic researchers, technology partners, and investors collaborate to accelerate industrialized, sustainable building.</p>
   <div class="cg">
-    <div class="card"><h4>Construction Innovation</h4><p>Advanced building systems and next-generation materials tested at full scale. From panelized walls to complete modular assemblies — every innovation validated before reaching clients. Research includes carbon-negative concrete and automated assembly robotics.</p></div>
+    <div class="card"><h4>Construction Innovation</h4><p>Advanced building systems and next-generation materials tested at full scale. From panelized walls to complete modular assemblies ; every innovation validated before reaching clients. Research includes carbon-negative concrete and automated assembly robotics.</p></div>
     <div class="card"><h4>Real Estate Innovation</h4><p>Future housing models, smart community planning, and sustainable development strategies. Bridging what's technically possible with what's financially viable. Focus: mixed-use modular, affordable housing delivery, community-scale net-zero masterplans.</p></div>
     <div class="card"><h4>Energy Innovation</h4><p>Renewables, battery storage, smart grids, and net-zero building strategies. Making every structure a contributor to a cleaner energy future. Projects: building-integrated photovoltaics, thermal storage, AI-driven energy management platforms.</p></div>
-    <div class="card"><h4>Technology &amp; Education</h4><p>AI-assisted design, IoT building monitoring, digital twin technology, parametric modeling — paired with university partnerships training the next generation of modular construction professionals across Europe.</p></div>
+    <div class="card"><h4>Technology &amp; Education</h4><p>AI-assisted design, IoT building monitoring, digital twin technology, parametric modeling ; paired with university partnerships training the next generation of modular construction professionals across Europe.</p></div>
     <div class="card"><h4>Content &amp; Knowledge Hub</h4><p>Research, thought leadership, case studies, and industry analysis freely shared. Programs: The Series (quarterly publications), The Workshops (technical training), Insta Talk (practitioner stories), Insta Insights (executive interviews).</p></div>
   </div>
 </div></section>
@@ -195,9 +200,9 @@ footer a{display:block;font-size:11px;color:var(--t3);padding:2px 0}footer a:hov
 <section class="sec" id="sustainability" style="border-top:1px solid var(--b)"><div class="con">
   <div class="sl">Sustainability</div>
   <h2 class="sh2">Building a greener future. Every building. No compromises.</h2>
-  <p class="sp" style="margin-bottom:16px">Sustainability is not a feature or an option — it is the foundation of how we build.</p>
+  <p class="sp" style="margin-bottom:16px">Sustainability is not a feature or an option ; it is the foundation of how we build.</p>
   <div class="cg cg3">
-    <div class="card"><h4>100% Eco, Bio &amp; Green Materials</h4><p>Bio-based insulation from renewable plant fibers. FSC-certified structural timber with chain-of-custody documentation. Zero-VOC interior finishes — no off-gassing. Every material selected for environmental performance and occupant health.</p></div>
+    <div class="card"><h4>100% Eco, Bio &amp; Green Materials</h4><p>Bio-based insulation from renewable plant fibers. FSC-certified structural timber with chain-of-custody documentation. Zero-VOC interior finishes ; no off-gassing. Every material selected for environmental performance and occupant health.</p></div>
     <div class="card"><h4>KfW 40 Energy Certification</h4><p>Buildings consume 60% less primary energy than legally required. Achieved through superior U-values, airtight envelopes verified by blower-door testing, thermal-bridge-free detailing, and mechanical ventilation with heat recovery.</p></div>
     <div class="card"><h4>90% Less Construction Waste</h4><p>Precision CNC cutting optimizes material usage to the millimeter. Controlled storage prevents weather damage. Off-cuts segregated and recycled. Reusable transport frames minimize packaging. Verified on every project.</p></div>
   </div>
@@ -205,8 +210,8 @@ footer a{display:block;font-size:11px;color:var(--t3);padding:2px 0}footer a:hov
 
 <!-- PROJECTS -->
 <section id="projects">
-  <div class="pj"><div class="pjbg"></div><div class="pjc"><div class="pjt">Multistory-Multifamily</div><h2>80+ units.<br>Under 12 months.</h2><p style="color:var(--t2);max-width:400px;font-size:14px;line-height:1.6">Full residential community. Each apartment factory-finished with kitchens, bathrooms, flooring, and MEP pre-installed. Six stories. Half the timeline of traditional construction.</p><div class="pjs"><div class="pjstat"><div class="pjsn">80+</div><div class="pjsl">Units</div></div><div class="pjstat"><div class="pjsn">&lt;12</div><div class="pjsl">Months</div></div><div class="pjstat"><div class="pjsn">6</div><div class="pjsl">Stories</div></div></div></div></div>
-  <div class="pj"><div class="pjbg"></div><div class="pjc"><div class="pjt">Senior Living</div><h2>120 residents.<br>100% accessible.</h2><p style="color:var(--t2);max-width:400px;font-size:14px;line-height:1.6">Private apartments, shared dining, activity rooms, landscaped gardens, integrated medical suite. Every unit designed for dignity, safety, and complete independence.</p><div class="pjs"><div class="pjstat"><div class="pjsn">120</div><div class="pjsl">Residents</div></div><div class="pjstat"><div class="pjsn">100%</div><div class="pjsl">Accessible</div></div><div class="pjstat"><div class="pjsn">60</div><div class="pjsl">Units</div></div></div></div></div>
+  <div class="pj"><div class="pjbg" style="background:url(https://www.instabuilt.com/images/home/multistory-multifamily.jpg) center/cover no-repeat"></div><div class="pjc"><div class="pjt">Multistory-Multifamily</div><h2>80+ units.<br>Under 12 months.</h2><p style="color:var(--t2);max-width:400px;font-size:14px;line-height:1.6">Full residential community. Each apartment factory-finished with kitchens, bathrooms, flooring, and MEP pre-installed. Six stories. Half the timeline of traditional construction.</p><div class="pjs"><div class="pjstat"><div class="pjsn">80+</div><div class="pjsl">Units</div></div><div class="pjstat"><div class="pjsn">&lt;12</div><div class="pjsl">Months</div></div><div class="pjstat"><div class="pjsn">6</div><div class="pjsl">Stories</div></div></div></div></div>
+    <div class="pj"><div class="pjbg" style="background:url(https://www.instabuilt.com/images/home/senior-solution.jpg) center/cover no-repeat"></div><div class="pjc"><div class="pjt">Senior Living</div><h2>120 residents.<br>100% accessible.</h2><p style="color:var(--t2);max-width:400px;font-size:14px;line-height:1.6">Private apartments, shared dining, activity rooms, landscaped gardens, integrated medical suite. Every unit designed for dignity, safety, and complete independence.</p><div class="pjs"><div class="pjstat"><div class="pjsn">120</div><div class="pjsl">Residents</div></div><div class="pjstat"><div class="pjsn">100%</div><div class="pjsl">Accessible</div></div><div class="pjstat"><div class="pjsn">60</div><div class="pjsl">Units</div></div></div></div></div>
 </section>
 
 <!-- CONTACT + FAQ -->
@@ -216,11 +221,11 @@ footer a{display:block;font-size:11px;color:var(--t3);padding:2px 0}footer a:hov
       <div class="sl">Frequently Asked</div>
       <h2 class="sh2" style="font-size:24px">Common questions</h2>
       <div class="faq" style="margin-top:14px">
-        <div class="faq-item"><button class="faq-q">How does InstaBuilt ensure sustainability?</button><div class="faq-a"><p>Sustainability is embedded in every operation — eco-friendly materials (bio-based insulation, FSC-certified timber, zero-VOC finishes), KfW 40 energy certification (60% less primary energy), and independently verified environmental standards on every project.</p></div></div>
-        <div class="faq-item"><button class="faq-q">What is the typical project timeline?</button><div class="faq-a"><p>Off-site manufacturing typically reduces total schedules by 30–50%. A multistory building can be weather-tight in days and fully complete in months — not the year-plus that traditional construction requires.</p></div></div>
-        <div class="faq-item"><button class="faq-q">Are solutions customizable?</button><div class="faq-a"><p>Yes. Every project — from POP UP configurations to signature residences — can be customized to unique architectural, functional, and site-specific requirements. We work directly with your design team.</p></div></div>
+        <div class="faq-item"><button class="faq-q">How does InstaBuilt ensure sustainability?</button><div class="faq-a"><p>Sustainability is embedded in every operation ; eco-friendly materials (bio-based insulation, FSC-certified timber, zero-VOC finishes), KfW 40 energy certification (60% less primary energy), and independently verified environmental standards on every project.</p></div></div>
+        <div class="faq-item"><button class="faq-q">What is the typical project timeline?</button><div class="faq-a"><p>Off-site manufacturing typically reduces total schedules by 30–50%. A multistory building can be weather-tight in days and fully complete in months ; not the year-plus that traditional construction requires.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Are solutions customizable?</button><div class="faq-a"><p>Yes. Every project ; from POP UP configurations to signature residences ; can be customized to unique architectural, functional, and site-specific requirements. We work directly with your design team.</p></div></div>
         <div class="faq-item"><button class="faq-q">Do you provide on-site assembly?</button><div class="faq-a"><p>Yes. Our assembly teams handle module placement, structural connection, sealing, utility commissioning, and final verification on site. Single point of accountability from factory to handover.</p></div></div>
-        <div class="faq-item"><button class="faq-q">Can you handle structural engineering?</button><div class="faq-a"><p>Absolutely. We provide complete structural engineering — load calculations, connection design, seismic analysis, wind engineering — ensuring full compliance with all applicable building codes.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Can you handle structural engineering?</button><div class="faq-a"><p>Absolutely. We provide complete structural engineering ; load calculations, connection design, seismic analysis, wind engineering ; ensuring full compliance with all applicable building codes.</p></div></div>
         <div class="faq-item"><button class="faq-q">What are the minimum project requirements?</button><div class="faq-a"><p>We prioritize projects over 2,000 m² or 40+ units. Engineering and design services cover multifamily, senior living, micro apartments, and hospitality. If your project has permits, we're ready.</p></div></div>
       </div>
     </div>
@@ -245,7 +250,7 @@ footer a{display:block;font-size:11px;color:var(--t3);padding:2px 0}footer a:hov
 </div></section>
 
 <footer><div class="fgrd">
-  <div><div style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;margin-bottom:10px"><svg width="18" height="18" viewBox="0 0 31 31"><path fill="var(--a)" fill-rule="evenodd" d="M0 0H31V31H0V0ZM24.9 13.2L18.7 16.8V23L12.5 26.6V14.2L6.3 10.6V4.3L12.5 7.9V14.1L18.7 10.5L24.9 7V13.2Z"/></svg>InstaBuilt</div><p style="font-size:10px;color:var(--t3);max-width:200px">Modular construction for sustainable buildings — off-site, worldwide.</p></div>
+  <div><div style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;margin-bottom:10px"><svg width="18" height="18" viewBox="0 0 31 31"><path fill="var(--a)" fill-rule="evenodd" d="M0 0H31V31H0V0ZM24.9 13.2L18.7 16.8V23L12.5 26.6V14.2L6.3 10.6V4.3L12.5 7.9V14.1L18.7 10.5L24.9 7V13.2Z"/></svg>InstaBuilt</div><p style="font-size:10px;color:var(--t3);max-width:200px">Modular construction for sustainable buildings ; off-site, worldwide.</p></div>
   <div><h5>Solutions</h5><a href="#solutions">POP UP</a><a href="#solutions">Multifamily</a><a href="#solutions">Senior Housing</a><a href="#solutions">Micro Apartments</a><a href="#solutions">Traditional</a><a href="#solutions">Signature</a><a href="#solutions">Bathpods</a></div>
   <div><h5>Company</h5><a href="#about">About</a><a href="#process">Process</a><a href="#innovation">Innovation</a><a href="#sustainability">Sustainability</a><a href="#projects">Projects</a><a href="#contact">Contact</a></div>
   <div><h5>Locations</h5><p style="font-size:10px;color:var(--t3);margin-bottom:6px"><strong style="color:var(--t2)">Europe</strong><br>Prishtina-Mitrovica Highway 12km, Kosovo</p><p style="font-size:10px;color:var(--t3)"><strong style="color:var(--t2)">North America</strong><br>3500 S Dupont Hwy, Dover, DE 19901</p></div>
@@ -273,17 +278,187 @@ function bt(n){bps.forEach(function(p,i){if(i<=n)p.classList.add('on')})}
 
 // Counters
 var ctd=new Set(),co=new IntersectionObserver(function(e){e.forEach(function(x){if(!x.isIntersecting||ctd.has(x.target))return;ctd.add(x.target);var el=x.target,t=parseInt(el.getAttribute('data-count')),c=0,d=Math.ceil(t/40);var iv=setInterval(function(){c+=d;if(c>=t){el.textContent=t.toLocaleString();clearInterval(iv)}else{el.textContent=c.toLocaleString()}},20)})},{threshold:.5});
-$$('.sn[data-count]').forEach(function(n){co.observe(n)});
+$('.sn[data-count]').forEach(function(n){co.observe(n)});
 
 // FAQ
-$$('.faq-q').forEach(function(q){q.addEventListener('click',function(){var i=this.parentElement,w=i.classList.contains('open');i.parentElement.querySelectorAll('.faq-item').forEach(function(x){x.classList.remove('open')});if(!w)i.classList.add('open')})});
+$('.faq-q').forEach(function(q){q.addEventListener('click',function(){var i=this.parentElement,w=i.classList.contains('open');i.parentElement.querySelectorAll('.faq-item').forEach(function(x){x.classList.remove('open')});if(!w)i.classList.add('open')})});
 
 // Contact form
 var cf=$$('#contact-form');if(cf)cf.addEventListener('submit',function(e){e.preventDefault();var ok=$$('#form-ok');if(ok){ok.style.display='block';setTimeout(function(){ok.style.display='none'},4000)}cf.reset()});
 
-// Smooth scroll
-$$('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var id=this.getAttribute('href');if(!id||id==='#')return;e.preventDefault();var t=$$(id);if(t)t.scrollIntoView({behavior:'smooth'})})});
+// Language toggle
+var D=localStorage.getItem('lang')||'en';
+var T={en:{},sq:{}};
+// Reverse dict for lookups
+var RV={};
+(function build(){
+var m={
+// Nav
+'About':'Rreth Nesh','Why Modular':'Pse Modulare','Process':'Procesi','Solutions':'Zgjidhjet','Innovation':'Inovacioni','Sustainability':'Qëndrueshmëria','Projects':'Projektet','Contact':'Kontakti',
+// Hero
+'The future':'E ardhmja','of living':'e jetesës','Modular construction systems. 50% faster. 100% sustainable. KfW 40 certified. Available in 28 m², 52 m², and 104 m².':'Sistemet e ndërtimit modular. 50% më shpejt. 100% e qëndrueshme. Certifikuar KfW 40. Në dispozicion në 28 m², 52 m² dhe 104 m².',
+// Stats
+'Thousand m² Plot':'Mijë m² Parcelë','m² Innovation Center':'m² Qendra e Inovacionit','Eco, Bio & Green':'Eko, Bio &amp; Green','Efficiency Standard':'Standardi i Efiçencës',
+// About
+'About InstaBuilt':'Rreth InstaBuilt','Redefining how the world builds':'Ridefinimi i mënyrës se si ndërton bota','Mission':'Misioni','Vision':'Vizioni',
+'To lead the construction industry toward a more sustainable and socially responsible future, ensuring our buildings benefit the environment and the communities they serve.':'Të udhëheqim industrinë e ndërtimit drejt një të ardhmeje më të qëndrueshme dhe me përgjegjësi sociale, duke siguruar që ndërtesat tona të përfitojnë mjedisin dhe komunitetet që u shërbejnë.',
+'To offer every individual access to sustainable, affordable housing that is efficient, resilient, and deeply integrated with the natural environment.':"T'i ofrojmë çdo individi qasje në banesa të qëndrueshme, të përballueshme, efikase, rezistente dhe thellësisht të integruara me mjedisin natyror.",
+'Led by CEO Mentor Pllana. 140,000 m² manufacturing campus. 5,700 m² Innovation Center. 5P Strategy: People, Process, Product, Project, Profit. Operating across Europe and North America.':'Nën udhëheqjen e CEO Mentor Pllana. 140,000 m² kampus prodhimi. 5,700 m² Qendra e Inovacionit. Strategjia 5P: People, Process, Product, Project, Profit. Operojmë në Evropë dhe Amerikën e Veriut.',
+// Why Modular
+'Why Modular Construction':'Pse Ndërtimi Modular','Off-site manufacturing is transforming how the world builds':'Prodhimi jashtë vendit po transformon mënyrën se si ndërton bota',
+"Traditional construction hasn't fundamentally changed in a century. InstaBuilt's industrialized approach delivers buildings faster, at higher quality, with dramatically less environmental impact.":"Ndërtimi tradicional nuk ka ndryshuar thelbësisht në një shekull. Qasja e industrializuar e InstaBuilt ofron ndërtesa më shpejt, me cilësi më të lartë, me ndikim dramatikisht më të ulët mjedisor.",
+'Faster Project Delivery':'Dorëzimi më i Shpejtë i Projektit','Parallel factory production and site preparation cut total project timelines in half. An 18-month traditional build becomes 9 months with modular. Weather delays eliminated. Occupancy begins sooner. Financing costs reduced.':'Prodhimi paralel në fabrikë dhe përgatitja e terrenit përgjysmojnë afatet totale të projektit. Një ndërtim tradicional 18-mujor bëhet 9 muaj me modular. Vonesat nga moti eliminohen. Banimi fillon më shpejt. Kostot e financimit reduktohen.',
+'Factory Precision Engineering':'Inxhinieri Precize në Fabrikë','Every module manufactured to exacting tolerances in controlled indoor conditions. No weather exposure. No site variability. Automated quality gates at every production station ensure standards traditional methods cannot match.':'Çdo modul prodhohet me toleranca të sakta në kushte të kontrolluara të brendshme. Pa ekspozim ndaj motit. Pa variabilitet terreni. Portat e automatizuara të cilësisë në çdo stacion prodhimi sigurojnë standarde që metodat tradicionale nuk mund t\'i arrijnë.',
+'Construction Waste Reduction':'Reduktimi i Mbetjeve të Ndërtimit','Factory-based manufacturing eliminates material waste endemic to site work. Precision cutting optimizes every sheet. Off-cuts recycled or repurposed. Verified waste reduction of up to 90% compared to conventional construction.':'Prodhimi në fabrikë eliminon mbetjet materiale endemike në punën në terren. Prerja precize optimizon çdo fletë. Copat e prera riciklohen ose ripërdoren. Reduktim i verifikuar i mbetjeve deri në 90% krahasuar me ndërtimin konvencional.',
+'German Energy Certification':'Certifikimi Gjerman i Energjisë','Buildings meet the rigorous KfW 40 standard ; consuming 60% less primary energy than legally required. Superior insulation, airtight construction, and thermal-bridge-free detailing reduce lifetime operational costs.':'Ndërtesat përmbushin standardin rigoroz KfW 40 ; duke konsumuar 60% më pak energji primare se sa kërkohet ligjërisht. Izolimi superior, ndërtimi hermetik dhe detajet pa ura termike reduktojnë kostot operative gjatë gjithë jetës.',
+'Eco, Bio & Green Materials':'Materiale Eko, Bio &amp; Green','Bio-based insulation from renewable plant fibers. FSC-certified structural timber. Non-toxic interior finishes with zero VOC emissions. Every material documented, certified, and traceable from source to site.':'Izolim me bazë bio nga fibra bimore të rinovueshme. Dru strukturor i certifikuar FSC. Përfundime të brendshme jo-toksike me zero emetime VOC. Çdo material i dokumentuar, i certifikuar dhe i gjurmueshëm nga burimi në terren.',
+'Scalability Without Compromise':'Shkallëzueshmëri Pa Kompromis','From a single 28 m² unit to a 200-unit multistory complex ; one system, one standard, one supply chain. Add modules horizontally. Stack vertically. The system adapts to any vision, any site.':'Nga një njësi e vetme 28 m² në një kompleks shumëkatësh me 200 njësi ; një sistem, një standard, një zinxhir furnizimi. Shto module horizontalisht. Stivo vertikalisht. Sistemi përshtatet me çdo vizion, çdo terren.',
+// Process
+'The InstaBuilt Process':'Procesi InstaBuilt','From concept to completion in four proven phases':'Nga koncepti në përfundim në katër faza të provuara',
+'Every project follows a rigorously tested methodology that eliminates uncertainty, compresses schedules, and delivers on time ; every time.':'Çdo projekt ndjek një metodologji të testuar rigorozisht që eliminon pasigurinë, kompakton oraret dhe dorëzon në kohë ; çdo herë.',
+'01 ; Design & Engineering':'01 ; Dizajn &amp; Inxhinieri','We collaborate with your architects to optimize plans for modular delivery. Structural calculations, MEP integration, and material selection are finalized before production begins ; eliminating costly change orders. Every load path, connection, and tolerance is engineered to precision.':'Bashkëpunojmë me arkitektët tuaj për të optimizuar planet për dorëzim modular. Llogaritjet strukturore, integrimi MEP dhe përzgjedhja e materialeve finalizohen para fillimit të prodhimit ; duke eliminuar ndryshimet e kushtueshme. Çdo rrugë ngarkese, lidhje dhe tolerancë është inxhinieruar me precizion.',
+'02 ; Manufacturing':'02 ; Prodhimi','Modules enter our controlled production facility where walls, floors, ceilings, windows, doors, and finishes are assembled under strict quality gates. Automated systems ensure consistent tolerances. Every module undergoes full inspection ; structural, electrical, plumbing ; before certification for departure.':'Modulet hyjnë në fabrikën tonë të kontrolluar ku muret, dyshemetë, tavanet, dritaret, dyert dhe përfundimet montohen nën portat strikte të cilësisë. Sistemet e automatizuara sigurojnë toleranca konsistente. Çdo modul i nënshtrohet inspektimit të plotë ; strukturor, elektrik, hidraulik ; para certifikimit për nisje.',
+'03 ; Transport & Logistics':'03 ; Transporti &amp; Logjistika','Completed modules are wrapped, sealed, and loaded. We manage the entire logistics chain ; route optimization, permits, customs clearance, escort vehicles. Consolidated deliveries reduce both cost and carbon. Modules tracked from factory gate to site.':'Modulet e përfunduara mbështillen, vulosen dhe ngarkohen. Ne menaxhojmë të gjithë zinxhirin logjistik ; optimizimin e rrugës, lejet, zhdoganimin, automjetet shoqëruese. Dërgesat e konsoliduara reduktojnë si koston ashtu edhe karbonin. Modulet gjurmohen nga porta e fabrikës në terren.',
+'04 ; On-Site Assembly':'04 ; Montimi në Terren','Cranes position modules onto prepared foundations. Crews connect structural ties, seal joints, and commission utilities. A multistory building weather-tight in days. Interior finishing and site work proceed in parallel. From foundation to handover ; predictable, reliable, fast.':'Vinçat pozicionojnë modulet mbi themelet e përgatitura. Ekipet lidhin lidhjet strukturore, vulosin bashkimet dhe komisionojnë shërbimet. Një ndërtesë shumëkatëshe e mbrojtur nga moti brenda ditësh. Përfundimet e brendshme dhe puna në terren vazhdojnë paralelisht. Nga themeli në dorëzim ; i parashikueshëm, i besueshëm, i shpejtë.',
+// Solutions
+'Seven product lines ; one system, infinite configurations':'Shtatë linja produktesh ; një sistem, konfigurime të pafundme',
+'From standalone homes to multistory urban developments. Same factory precision, same sustainability standards, same quality ; at any scale.':'Nga shtëpi të pavarura në zhvillime urbane shumëkatëshe. E njëjta precizion fabrike, të njëjtat standarde qëndrueshmërie, e njëjta cilësi ; në çdo shkallë.',
+'POP UP Solutions':'Zgjidhjet POP UP','Standalone modular homes in three sizes: 28, 52, and 104 m². Fully finished interiors ; premium kitchen, bathroom, flooring, energy systems pre-installed. Move-in ready within weeks. Residential, hospitality, remote workforce.':'Shtëpi modulare të pavarura në tre madhësi: 28, 52 dhe 104 m². Brendësi plotësisht të përfunduara ; kuzhinë premium, banjo, dysheme, sisteme energjie të para-instaluara. Gati për banim brenda javësh. Rezidenciale, hoteleri, fuqi punëtore në distancë.',
+'Multistory-Multifamily':'Shumëkatëshe-Multifamiljare','Mid to high-rise residential on hybrid steel-and-timber structure supporting up to 12 stories. Each apartment factory-finished and stacked on site. Urban-density buildings in months instead of years.':'Rezidenciale të mesme dhe të larta mbi strukturë hibride çeliku dhe druri që mbështet deri në 12 kate. Çdo apartament i përfunduar në fabrikë dhe i stivuar në terren. Ndërtesa me densitet urban në muaj në vend të viteve.',
+'Senior Housing':'Banesa për të Moshuar','Accessibility-first design ; wide doorways, zero-step entries, slip-resistant surfaces, emergency call integration. Private apartments with shared community spaces. Dignity, safety, independence built in from the ground up.':'Dizajn me aksesueshmëri prioritare ; porta të gjera, hyrje pa shkallë, sipërfaqe anti-rrëshqitëse, integrim i thirrjeve të emergjencës. Apartamente private me hapësira të përbashkëta komunitare. Dinjitet, siguri, pavarësi të ndërtuara nga themeli.',
+'Micro Apartments':'Mikro Apartamente','Compact urban living through intelligent spatial design. High ceilings, large windows, integrated storage, full kitchens and bathrooms. Every centimeter optimized. Ideal for city-center developments targeting young professionals.':'Jetesë urbane kompakte përmes dizajnit inteligjent hapësinor. Tavane të larta, dritare të mëdha, depo të integruar, kuzhina dhe banjo të plota. Çdo centimetër i optimizuar. Ideale për zhvillime në qendër të qytetit që synojnë profesionistët e rinj.',
+'Traditional Homes':'Shtëpi Tradicionale','European and American residential architecture reimagined for modular. Pitched roofs, brick facades, bay windows, porches ; all the character of traditional homes with factory precision and modern speed.':'Arkitekturë rezidenciale evropiane dhe amerikane e ri-imagjinuar për modular. Çati me pjerrësi, fasada me tulla, dritare të dala, veranda ; gjithë karakteri i shtëpive tradicionale me precizion fabrike dhe shpejtësi moderne.',
+'Signature Homes':'Shtëpi Firmë','Custom architectural residences ; unique geometries, premium natural materials, cantilevered volumes. The modular system handles complexity that sends traditional budgets spiraling. Bespoke architecture, delivered predictably.':'Rezidenca arkitekturore me porosi ; gjeometri unike, materiale natyrale premium, volume të konsoluara. Sistemi modular trajton kompleksitetin që i bën buxhetet tradicionale të dalin jashtë kontrollit. Arkitekturë e personalizuar, e dorëzuar në mënyrë të parashikueshme.',
+'Bathpods':'Banjokapsula','Complete factory-finished bathrooms ; plumbing, tiling, waterproofing, fixtures, lighting, ventilation ; all pre-installed and pressure-tested. Delivered sealed, connected in hours. Eliminates the highest-risk trade from your schedule entirely.':'Banjo të plota të përfunduara në fabrikë ; hidraulikë, pllaka, hidroizolim, pajisje, ndriçim, ventilim ; të gjitha të para-instaluara dhe të testuara me presion. Dorëzohen të vulosura, lidhen brenda orësh. Eliminon plotësisht zejen me riskun më të lartë nga orari juaj.',
+// Innovation
+'Insta Innovation Center':'Qendra e Inovacionit Insta','5,700 m² dedicated entirely to the future of construction':'5,700 m² dedikuar tërësisht të ardhmes së ndërtimit',
+'A purpose-built facility where industry leaders, academic researchers, technology partners, and investors collaborate to accelerate industrialized, sustainable building.':'Një strukturë e ndërtuar me qëllim ku liderët e industrisë, kërkuesit akademikë, partnerët teknologjikë dhe investitorët bashkëpunojnë për të përshpejtuar ndërtimin e industrializuar dhe të qëndrueshëm.',
+'Construction Innovation':'Inovacioni në Ndërtim','Advanced building systems and next-generation materials tested at full scale. From panelized walls to complete modular assemblies ; every innovation validated before reaching clients. Research includes carbon-negative concrete and automated assembly robotics.':'Sisteme të avancuara ndërtimi dhe materiale të gjeneratës së ardhshme të testuara në shkallë të plotë. Nga muret e panelizuara në montime të plota modulare ; çdo inovacion i validuar para se të arrijë klientët. Kërkimi përfshin beton karbon-negativ dhe robotikë të automatizuar të montimit.',
+'Real Estate Innovation':'Inovacioni në Pasuri të Paluajtshme','Future housing models, smart community planning, and sustainable development strategies. Bridging what\'s technically possible with what\'s financially viable. Focus: mixed-use modular, affordable housing delivery, community-scale net-zero masterplans.':'Modele të ardhshme banimi, planifikim inteligjent të komunitetit dhe strategji të qëndrueshme zhvillimi. Duke lidhur atë që është teknikisht e mundur me atë që është financiarisht e zbatueshme. Fokusi: modular me përdorim të përzier, ofrimi i banesave të përballueshme, masterplane neto-zero në shkallë komuniteti.',
+'Energy Innovation':'Inovacioni në Energji','Renewables, battery storage, smart grids, and net-zero building strategies. Making every structure a contributor to a cleaner energy future. Projects: building-integrated photovoltaics, thermal storage, AI-driven energy management platforms.':'Energji të rinovueshme, ruajtje me bateri, rrjete inteligjente dhe strategji ndërtimi neto-zero. Duke e bërë çdo strukturë një kontribues në një të ardhme më të pastër energjetike. Projektet: fotovoltaikë të integruar në ndërtesa, ruajtje termike, platforma të menaxhimit të energjisë të drejtuara nga AI.',
+'Technology & Education':'Teknologji &amp; Edukim','AI-assisted design, IoT building monitoring, digital twin technology, parametric modeling ; paired with university partnerships training the next generation of modular construction professionals across Europe.':'Dizajn i asistuar nga AI, monitorim i ndërtesave me IoT, teknologji e binjakut dixhital, modelim parametrik ; shoqëruar me partneritete universitare që trajnojnë gjeneratën e ardhshme të profesionistëve të ndërtimit modular në të gjithë Evropën.',
+'Content & Knowledge Hub':'Qendra e Përmbajtjes &amp; Dijes','Research, thought leadership, case studies, and industry analysis freely shared. Programs: The Series (quarterly publications), The Workshops (technical training), Insta Talk (practitioner stories), Insta Insights (executive interviews).':'Kërkime, lidership mendimi, raste studimore dhe analiza të industrisë të ndara lirisht. Programet: Seritë (botime tremujore), Punëtoritë (trajnime teknike), Insta Talk (histori të praktikuesve), Insta Insights (intervista me ekzekutivë).',
+// Sustainability
+'Building a greener future. Every building. No compromises.':'Duke ndërtuar një të ardhme më të gjelbër. Çdo ndërtesë. Pa kompromise.',
+'Sustainability is not a feature or an option ; it is the foundation of how we build.':'Qëndrueshmëria nuk është një veçori ose një opsion ; është themeli i mënyrës se si ne ndërtojmë.',
+'100% Eco, Bio & Green Materials':'100% Materiale Eko, Bio &amp; Green','Bio-based insulation from renewable plant fibers. FSC-certified structural timber with chain-of-custody documentation. Zero-VOC interior finishes ; no off-gassing. Every material selected for environmental performance and occupant health.':'Izolim me bazë bio nga fibra bimore të rinovueshme. Dru strukturor i certifikuar FSC me dokumentacion të zinxhirit të ruajtjes. Përfundime të brendshme me zero VOC ; pa emetime. Çdo material i përzgjedhur për performancë mjedisore dhe shëndet të banorëve.',
+'KfW 40 Energy Certification':'Certifikimi i Energjisë KfW 40','Buildings consume 60% less primary energy than legally required. Achieved through superior U-values, airtight envelopes verified by blower-door testing, thermal-bridge-free detailing, and mechanical ventilation with heat recovery.':'Ndërtesat konsumojnë 60% më pak energji primare se sa kërkohet ligjërisht. Arrihet përmes vlerave superiore U, mbështjellësve hermetikë të verifikuar me testim me derë ventilator, detajeve pa ura termike dhe ventilimit mekanik me rikuperim të nxehtësisë.',
+'90% Less Construction Waste':'90% Më Pak Mbetje Ndërtimi','Precision CNC cutting optimizes material usage to the millimeter. Controlled storage prevents weather damage. Off-cuts segregated and recycled. Reusable transport frames minimize packaging. Verified on every project.':'Prerja precize CNC optimizon përdorimin e materialit në milimetër. Magazinimi i kontrolluar parandalon dëmtimin nga moti. Copat e prera ndahen dhe riciklohen. Kornizat e ripërdorshme të transportit minimizojnë paketimin. Verifikohet në çdo projekt.',
+// Projects
+'80+ units.':'80+ njësi.','Under 12 months.':'Nën 12 muaj.',
+'80+ units.||BR||Under 12 months.':'80+ njësi.||BR||Nën 12 muaj.',
+'Full residential community. Each apartment factory-finished with kitchens, bathrooms, flooring, and MEP pre-installed. Six stories. Half the timeline of traditional construction.':'Komunitet i plotë rezidencial. Çdo apartament i përfunduar në fabrikë me kuzhina, banjo, dysheme dhe MEP të para-instaluara. Gjashtë kate. Gjysma e kohës së ndërtimit tradicional.',
+'Units':'Njësi','Months':'Muaj','Stories':'Kate',
+'120 residents.':'120 banorë.','100% accessible.':'100% e aksesueshme.',
+'120 residents.||BR||100% accessible.':'120 banorë.||BR||100% e aksesueshme.',
+'Private apartments, shared dining, activity rooms, landscaped gardens, integrated medical suite. Every unit designed for dignity, safety, and complete independence.':'Apartamente private, ngrënie e përbashkët, dhoma aktivitetesh, kopshte të peizazhuara, suitë mjekësore e integruar. Çdo njësi e dizajnuar për dinjitet, siguri dhe pavarësi të plotë.',
+'Residents':'Banorë','Accessible':'E Aksesueshme',
+// FAQ
+'Frequently Asked':'Pyetje të Shpeshta','Common questions':'Pyetje të zakonshme',
+'How does InstaBuilt ensure sustainability?':'Si e siguron InstaBuilt qëndrueshmërinë?',
+'Sustainability is embedded in every operation ; eco-friendly materials (bio-based insulation, FSC-certified timber, zero-VOC finishes), KfW 40 energy certification (60% less primary energy), and independently verified environmental standards on every project.':'Qëndrueshmëria është e integruar në çdo operacion ; materiale eko-miqësore (izolim me bazë bio, dru i certifikuar FSC, përfundime me zero VOC), certifikim energjetik KfW 40 (60% më pak energji primare) dhe standarde mjedisore të verifikuara në mënyrë të pavarur në çdo projekt.',
+'What is the typical project timeline?':'Cili është afati tipik i projektit?',
+'Off-site manufacturing typically reduces total schedules by 30–50%. A multistory building can be weather-tight in days and fully complete in months ; not the year-plus that traditional construction requires.':'Prodhimi jashtë vendit zakonisht redukton oraret totale me 30–50%. Një ndërtesë shumëkatëshe mund të jetë e mbrojtur nga moti brenda ditësh dhe plotësisht e përfunduar në muaj ; jo vitet që kërkon ndërtimi tradicional.',
+'Are solutions customizable?':'A janë zgjidhjet e personalizueshme?',
+'Yes. Every project ; from POP UP configurations to signature residences ; can be customized to unique architectural, functional, and site-specific requirements. We work directly with your design team.':'Po. Çdo projekt ; nga konfigurimet POP UP në rezidencat firmë ; mund të personalizohet sipas kërkesave unike arkitekturore, funksionale dhe specifike të terrenit. Ne punojmë drejtpërdrejt me ekipin tuaj të dizajnit.',
+'Do you provide on-site assembly?':'A ofroni montim në terren?',
+'Yes. Our assembly teams handle module placement, structural connection, sealing, utility commissioning, and final verification on site. Single point of accountability from factory to handover.':'Po. Ekipet tona të montimit trajtojnë vendosjen e moduleve, lidhjen strukturore, vulosjen, komisionimin e shërbimeve dhe verifikimin përfundimtar në terren. Pikë e vetme e përgjegjshmërisë nga fabrika në dorëzim.',
+'Can you handle structural engineering?':'A mund të trajtoni inxhinierinë strukturore?',
+'Absolutely. We provide complete structural engineering ; load calculations, connection design, seismic analysis, wind engineering ; ensuring full compliance with all applicable building codes.':'Absolutisht. Ne ofrojmë inxhinieri të plotë strukturore ; llogaritje të ngarkesës, dizajn të lidhjeve, analizë sizmike, inxhinieri të erës ; duke siguruar pajtueshmëri të plotë me të gjitha kodet e zbatueshme të ndërtimit.',
+'What are the minimum project requirements?':'Cilat janë kërkesat minimale të projektit?',
+'We prioritize projects over 2,000 m² or 40+ units. Engineering and design services cover multifamily, senior living, micro apartments, and hospitality. If your project has permits, we\'re ready.':'Ne prioritizojmë projektet mbi 2,000 m² ose 40+ njësi. Shërbimet e inxhinierisë dhe dizajnit mbulojnë multifamiljare, banesa për të moshuar, mikro apartamente dhe hoteleri. Nëse projekti juaj ka leje, ne jemi gati.',
+// Contact form
+'Start a conversation':'Fillo një bisedë',
+'For general inquiries or to discuss a project. We respond within 48 hours.':'Për pyetje të përgjithshme ose për të diskutuar një projekt. Ne përgjigjemi brenda 48 orëve.',
+'Full Name':'Emri i Plotë','Your name':'Emri juaj','Email Address':'Adresa e Emailit','your@email.com':'emaili@juaj.com',
+'Company':'Kompania','Your company':'Kompania juaj',
+'Tell us about your project':'Na tregoni për projektin tuaj',
+'Project type, location, scale, timeline...':'Lloji i projektit, lokacioni, shkalla, afati...',
+'Send Message':'Dërgo Mesazhin','Thank you. We\'ll be in touch.':'Faleminderit. Do të jemi në kontakt.',
+'Europe':'Evropë','North America':'Amerika e Veriut',
+'Street Victoria':'Rruga Victoria','Prishtina-Mitrovica Highway 12km':'Autostrada Prishtinë-Mitrovicë 12km','Kosovo':'Kosovë',
+'3500 S Dupont Hwy':'3500 S Dupont Hwy','Dover, DE 19901':'Dover, DE 19901','United States':'Shtetet e Bashkuara',
+// Footer
+'Modular construction for sustainable buildings ; off-site, worldwide.':'Ndërtim modular për ndërtesa të qëndrueshme ; jashtë vendit, në mbarë botën.',
+'Multifamily':'Multifamiljare','Traditional':'Tradicionale','Signature':'Firmë',
+'Locations':'Lokacionet','Privacy':'Privatësia','Legal':'Ligjore',
+'POP UP':'POP UP','Senior Housing':'Banesa për të Moshuar','Micro Apartments':'Mikro Apartamente',
+'© 2026 InstaBuilt':'© 2026 InstaBuilt',
+'Bathpods':'Banjokapsula'
+};
+for(var k in m){T.en[k]=k;T.sq[k]=m[k];RV[m[k]]=k}
 })();
+
+function applyLang(l){
+  document.documentElement.lang=l;
+  var btn=$$('#lang-toggle');
+  if(l==='sq'){btn.textContent='English';btn.style.borderColor='#fff';btn.style.color='#fff'}
+  else{btn.textContent='Shqip';btn.style.borderColor='';btn.style.color=''}
+  // Walk all text-bearing elements and translate
+  var all=document.querySelectorAll('h1,h2,h3,h4,h5,p,a,button,label,span,div.sl,div.sl2,div.cs,div.pjt,div.pjsn,div.pjsl,strong');
+  all.forEach(function(el){
+    // Skip inputs and the lang button itself
+    if(el.tagName==='INPUT'||el.tagName==='TEXTAREA'||el.id==='lang-toggle')return;
+    // Skip nav logo svg text
+    if(el.closest('.nav-logo')&&el.tagName!=='A')return;
+    var t=el.textContent.trim();
+    if(!t)return;
+    // Elements with <br> but no other element children ; use innerHTML replacement
+    var hasBr=el.querySelector('br');
+    var hasOnlyBr=(hasBr && el.children.length===1 && el.children[0].tagName==='BR') || (hasBr && el.children.length===0);
+    // H1 special: translate text node + span
+    if(el.tagName==='H1'){
+      var span=el.querySelector('span');
+      var txt='The future';
+      if(l==='sq'){
+        var cn=el.childNodes;
+        for(var i=0;i<cn.length;i++){if(cn[i].nodeType===3&&cn[i].textContent.trim()===txt){cn[i].textContent='E ardhmja';break}}
+        if(span)span.textContent='e jetesës';
+      }else{
+        var cn=el.childNodes;
+        for(var i=0;i<cn.length;i++){if(cn[i].nodeType===3&&cn[i].textContent.trim()==='E ardhmja'){cn[i].textContent=txt;break}}
+        if(span)span.textContent='of living';
+      }
+      return;
+    }
+    // Elements with only <br> children ; handle via innerHTML
+    if(hasOnlyBr&&!el.classList.contains('sl')&&!el.classList.contains('sl2')&&!el.classList.contains('cs')&&!el.classList.contains('pjt')&&!el.classList.contains('pjsn')&&!el.classList.contains('pjsl')&&el.tagName!=='STRONG'){
+      var h=el.innerHTML.replace(/<br\s*\/?>/gi,'||BR||');
+      if(T[l][h]){el.innerHTML=T[l][h].replace(/\|\|BR\|\|/g,'<br>')}
+      return;
+    }
+    // Skip elements with child elements (handled by children)
+    if(el.children.length>0 && !el.classList.contains('sl') && !el.classList.contains('sl2') && !el.classList.contains('cs') && !el.classList.contains('pjt') && !el.classList.contains('pjsn') && !el.classList.contains('pjsl') && el.tagName!=='STRONG')return;
+    // Translate textContent
+    if(T[l][t]){el.textContent=T[l][t]}
+  });
+  // Handle nav links separately
+  var navLinks=document.querySelectorAll('.nav-links > a');
+  navLinks.forEach(function(a){
+    var t=a.textContent.trim();
+    if(T[l][t])a.textContent=T[l][t];
+  });
+  // Handle placeholders
+  var inputs=document.querySelectorAll('input[placeholder],textarea[placeholder]');
+  inputs.forEach(function(inp){
+    var ph=inp.getAttribute('placeholder');
+    if(ph&&T[l][ph])inp.setAttribute('placeholder',T[l][ph]);
+  });
+  localStorage.setItem('lang',l);
+}
+
+// Init
+if(D==='sq')applyLang('sq');
+
+$$('#lang-toggle').addEventListener('click',function(){
+  D=D==='en'?'sq':'en';
+  applyLang(D);
+});
+
+// Smooth scroll
+$('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var id=this.getAttribute('href');if(!id||id==='#')return;e.preventDefault();var t=$$(id);if(t)t.scrollIntoView({behavior:'smooth'})})});
+})();
+
 </script>
 </body>
 </html>
