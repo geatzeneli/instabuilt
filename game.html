@@ -1,89 +1,194 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InstaBuilt Game</title>
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>InstaBuilt — Neighborhood Delivery</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:'Inter',-apple-system,sans-serif}
+html,body{width:100%;height:100%;overflow:hidden;background:#87CEEB;font-family:Inter,-apple-system,sans-serif}
 canvas{display:block}
-#ui{position:fixed;top:16px;left:16px;z-index:10;display:flex;gap:10px;align-items:center}
-#back{color:#fff;text-decoration:none;font-size:12px;font-weight:600;padding:8px 14px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;transition:all .2s}
-#back:hover{background:rgba(255,255,255,0.08)}
-#info{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:10;color:rgba(255,255,255,0.4);font-size:11px;letter-spacing:0.5px}
-</style>
-</head>
-<body>
+#ui{position:fixed;inset:0;pointer-events:none;z-index:10}#ui>*{pointer-events:auto}
+#obj{position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.65);backdrop-filter:blur(10px);color:#fff;padding:8px 20px;border-radius:22px;font-size:13px;font-weight:600;text-align:center;max-width:90%}
+#hint{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.75);color:#ffd700;padding:10px 22px;border-radius:22px;font-size:14px;font-weight:700;animation:pulse 1.5s infinite;display:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+#hud{position:absolute;top:14px;right:14px;display:flex;flex-direction:column;gap:6px}
+.hi{background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);color:#fff;padding:6px 14px;border-radius:16px;font-size:12px;font-weight:600}
+#shop{position:absolute;bottom:14px;right:14px;display:flex;flex-direction:column;gap:5px}
+.sb{background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);color:#ffd700;border:1px solid rgba(255,215,0,0.25);padding:7px 14px;border-radius:16px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+.sb:hover{background:rgba(255,215,0,0.12);border-color:#ffd700;transform:scale(1.03)}.sb:disabled{opacity:.35;pointer-events:none}
+.mp{position:absolute;color:#ffd700;font-weight:900;font-size:22px;pointer-events:none;animation:fu 1s forwards;text-shadow:0 0 8px rgba(255,215,0,0.5)}
+@keyframes fu{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-50px)}}
+#batch{position:absolute;top:60px;left:50%;transform:translateX(-50%);display:flex;gap:4px}
+.dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all .3s}.dot.done{background:#3B9B55;box-shadow:0 0 8px rgba(59,155,85,0.6)}
+#mm{position:absolute;bottom:14px;left:14px;width:120px;height:120px;border-radius:50%;background:rgba(0,0,0,0.45);border:2px solid rgba(255,255,255,0.2)}
+</style></head><body>
 <div id="ui">
-  <a href="index.html" id="back">← Back to InstaBuilt</a>
-</div>
-<div id="info">InstaBuilt Game — Coming Soon</div>
-<script>
-(function(){
-var canvas=document.createElement('canvas');
-document.body.appendChild(canvas);
-var ctx=canvas.getContext('2d');
-var W,H;
+<div id="obj">🚚 Drive to a glowing house!</div><div id="batch"></div>
+<div id="hint">Press <b style="background:#ffd700;color:#000;padding:2px 8px;border-radius:4px;margin:0 4px">E</b> to pick up</div>
+<div id="hud"><div class="hi">💰 <span id="money">$0</span></div><div class="hi">🏘️ <span id="nb">0</span> neighborhoods</div><div class="hi">⭐ <span id="rating">★</span></div></div>
+<div id="shop">
+<button class="sb" id="us" onclick="buy('speed')">⚡ Speed <span id="ls">1</span> ($<span id="cs">500</span>)</button>
+<button class="sb" id="up" onclick="buy('pay')">💵 Income <span id="lp">1</span> ($<span id="cp">500</span>)</button>
+</div><canvas id="mmc" width="120" height="120"></canvas></div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import*as T from'three';
+const S=new T.Scene();S.background=new T.Color('#a8dcee');S.fog=new T.Fog('#b8ddf0',150,360);
+const C=new T.PerspectiveCamera(55,innerWidth/innerHeight,0.5,300);C.position.set(-70,14,10);
+const R=new T.WebGLRenderer({antialias:true});R.setSize(innerWidth,innerHeight);R.setPixelRatio(Math.min(devicePixelRatio,1.5));
+R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.1;
+document.body.appendChild(R.domElement);
+const sun=new T.DirectionalLight('#fff8e8',4.5);sun.position.set(70,85,60);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.near=1;sun.shadow.camera.far=350;
+sun.shadow.camera.left=-120;sun.shadow.camera.right=120;sun.shadow.camera.top=120;sun.shadow.camera.bottom=-120;
+S.add(sun);S.add(new T.AmbientLight('#d0e4f2',2.2));S.add(new T.HemisphereLight('#b0d4ec','#7a8e3a',0.8));
+const ground=new T.Mesh(new T.PlaneGeometry(350,350),new T.MeshLambertMaterial({color:'#6dae3a'}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;S.add(ground);
 
-function resize(){
-  W=canvas.width=window.innerWidth;
-  H=canvas.height=window.innerHeight;
+const B=new T.BoxGeometry(1,1,1);
+const MT={g:new T.MeshLambertMaterial({color:'#6dae3a'}),rd:new T.MeshLambertMaterial({color:'#4a4a4a'}),ln:new T.MeshLambertMaterial({color:'#ffdd44'}),fd:new T.MeshLambertMaterial({color:'#b0b0b0'}),fg:new T.MeshLambertMaterial({color:'#3B9B55',emissive:new T.Color('#2d7a42'),emissiveIntensity:0.4}),wa:new T.MeshLambertMaterial({color:'#f5ecd7'}),wb:new T.MeshLambertMaterial({color:'#e8dcc8'}),wc:new T.MeshLambertMaterial({color:'#f0e4d0'}),wd:new T.MeshLambertMaterial({color:'#c4956a'}),ra:new T.MeshLambertMaterial({color:'#c44a4a'}),rb:new T.MeshLambertMaterial({color:'#8b4513'}),rc:new T.MeshLambertMaterial({color:'#6b3a2a'}),wi:new T.MeshLambertMaterial({color:'#c8e8f8'}),dr:new T.MeshLambertMaterial({color:'#5a3520'}),tr:new T.MeshLambertMaterial({color:'#3B9B55'}),td:new T.MeshLambertMaterial({color:'#2d7a42'}),tb:new T.MeshLambertMaterial({color:'#555'}),wh:new T.MeshLambertMaterial({color:'#1a1a1a'}),rk:new T.MeshLambertMaterial({color:'#7a7a7a'}),bu:new T.MeshLambertMaterial({color:'#4a7a2a'}),fl:new T.MeshLambertMaterial({color:'#c4a882'}),cr:new T.MeshLambertMaterial({color:'#e8e0d5'}),cr2:new T.MeshLambertMaterial({color:'#f5f0e8'}),pk:new T.MeshLambertMaterial({color:'#3a3a3a'}),gls:new T.MeshLambertMaterial({color:'#c8e0f0',transparent:true,opacity:0.6})};
+
+function v(x,y,z,m){const o=new T.Mesh(B,m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;return o}
+function a(x,y,z,m){S.add(v(x,y,z,m))}
+
+// Roads
+function rX(z,s,e){for(let x=s;x<=e;x++){a(x,0.08,z,MT.rd);if(Math.abs(x)%12<2)a(x,0.09,z,MT.ln)}}
+rX(8,-100,100);rX(-8,-100,100);rZz(-60,-8,8);rZz(60,-8,8);rX(22,-80,80);rX(-22,-80,80);rZz(40,-8,22);rZz(-40,-8,22);
+function rZz(x,s,e){for(let z=s;z<=e;z++)a(x,0.08,z,MT.rd)}
+[28,-28,34,-34,48,-48,54,-54,62,-62,70,-70,78,-78].forEach(x=>{for(let z=-8;z<=22;z++)a(x,0.08,z,MT.rd)});
+
+// Trees (simplified)
+function tree(x,z){const h=1+Math.floor(Math.random()*2);for(let y=0;y<h;y++)a(x,1+y,z,MT.wd);for(let dy=0;dy<2;dy++){a(x-1,1+h+dy,z,MT.bu);a(x+1,1+h+dy,z,MT.bu);a(x,1+h+dy,z-1,MT.bu);a(x,1+h+dy,z+1,MT.bu);a(x,2+h+dy,z,MT.bu)}}
+for(let i=0;i<50;i++){const x=(Math.random()-0.5)*190,z=(Math.random()-0.5)*100;if(Math.abs(z-8)<6||Math.abs(z+8)<6||Math.abs(z-22)<6||Math.abs(z+22)<6)continue;tree(x,z)}
+
+// ==================== GRAND HQ ====================
+const HQX=-75,HQZ=-30;
+// Main building - 4-story with architectural detail
+for(let y=0;y<=5;y++){const w=y<4?MT.cr:MT.cr2;
+ for(let x=-6;x<=6;x++)for(let z=-4;z<=4;z++){
+  if(x===0&&z>=-1&&z<=1&&y<2)continue; // Door gap
+  if((x===-6||x===6)&&(z===-4||z===0||z===4)&&y>=2)continue; // Corner windows
+  if((z===-4||z===4)&&x%2===0&&y>=2&&y<=3)continue; // Side windows
+  a(HQX+x,0.3+y,HQZ+z,w)}}
+// Glass entrance
+for(let y=0;y<=3;y++){a(HQX,0.8+y,HQZ+5,MT.gls)}
+// Entrance canopy
+for(let x=-2;x<=2;x++)for(let z=4;z<=6;z++)a(HQX+x,4.5,HQZ+z,MT.td);
+for(let x=-1;x<=1;x++)a(HQX+x,4.5,HQZ+6,new T.MeshLambertMaterial({color:'#3B9B55'}));
+// Green roof with parapet
+for(let x=-7;x<=7;x++)for(let z=-5;z<=5;z++)a(HQX+x,6.3,HQZ+z,MT.tr);
+for(let x=-7;x<=7;x++){a(HQX+x,7.3,HQZ-5,MT.td);a(HQX+x,7.3,HQZ+5,MT.td)} // Parapet
+// Sign materials
+const hqS=new T.MeshLambertMaterial({color:'#3B9B55'}),hqW=new T.MeshLambertMaterial({color:'#fff'});
+// INSTABUILT sign (large)
+for(let x=-4;x<=4;x++)a(HQX+x,5.8,HQZ+6,x===0?hqW:hqS);
+a(HQX-5,5.8,HQZ+6,hqS);a(HQX+5,5.8,HQZ+6,hqS);
+for(let x=-4;x<=4;x++)a(HQX+x,5.8,HQZ-6,x===0?hqW:hqS);
+// Parking
+for(let x=-22;x<=22;x++)for(let z=-12;z<=6;z++){if(Math.abs(z+3)<2&&x%6===0)continue;a(HQX+x,0.15,HQZ+z,MT.pk)}
+for(let x=-20;x<=20;x+=6)for(let z=-10;z<=5;z++)a(HQX+x,0.16,HQZ+z,MT.ln);
+// Yard bays
+const yardBays=[];
+for(let row=0;row<3;row++)for(let col=0;col<6;col++){const sx=HQX-20+col*8,sz=HQZ+10+row*8;for(let x=sx-2;x<=sx+2;x++)for(let z=sz-2;z<=sz+2;z++)a(x,0.12,z,new T.MeshLambertMaterial({color:'#5a5a5a'}));a(sx,0.13,sz,MT.ln);a(sx-2,0.13,sz,MT.ln);a(sx+2,0.13,sz,MT.ln);yardBays.push({x:sx,z:sz})}
+// Stacks
+for(let s=0;s<5;s++){const sx=HQX-10+s*5;for(let y=0;y<2;y++)for(let dx=0;dx<=2;dx++)for(let dz=0;dz<=2;dz++)a(sx+dx,0.5+y,HQZ-16+dz,MT.wa)}
+// Fence
+const fX1=HQX-24,fX2=HQX+24,fZ1=HQZ-18,fZ2=HQZ+36;
+for(let x=fX1;x<=fX2;x++){a(x,0.5,fZ1,MT.wd);a(x,0.5,fZ2,MT.wd)}for(let z=fZ1;z<=fZ2;z++){a(fX1,0.5,z,MT.wd);a(fX2,0.5,z,MT.wd)}
+for(let x=HQX-30;x<=HQX-24;x++)a(x,0.08,HQZ-18,MT.rd);
+
+// ==================== DETAILED TRUCK ====================
+const truck=new T.Group();
+const Tb=MT.tr,Td=MT.td,Tk=MT.tb,Tw=MT.wh,Tg=MT.gls;
+// Chassis frame
+for(let x=-1;x<=1;x++)for(let z=-3;z<=5;z++)truck.add(v(x,0.2,z,Tk));
+// Cab body
+for(let x=-1;x<=1;x++)for(let y=0;y<=2;y++)for(let z=-3;z<=-1;z++)truck.add(v(x,y+0.4,z,Tb));
+// Cab roof (slightly raised)
+for(let x=-1;x<=1;x++)for(let z=-3;z<=-1;z++)truck.add(v(x,3.5,z,Td));
+// Windshield
+truck.add(v(0,1.5,-0.6,Tg));truck.add(v(0,2.5,-0.6,Tg));
+// Headlights
+truck.add(v(-0.5,1,-3.1,new T.MeshLambertMaterial({color:'#ffeedd',emissive:new T.Color('#ffeecc'),emissiveIntensity:0.3})));
+truck.add(v(0.5,1,-3.1,new T.MeshLambertMaterial({color:'#ffeedd',emissive:new T.Color('#ffeecc'),emissiveIntensity:0.3})));
+// Side mirrors
+truck.add(v(-1.5,2.5,-1.5,Tk));truck.add(v(1.5,2.5,-1.5,Tk));
+// Exhaust pipe
+truck.add(v(-1,0.6,3,Tk));truck.add(v(-1,0.6,4,Tk));
+// Flatbed platform
+for(let x=-1.5;x<=1.5;x++)for(let z=0;z<=5;z++)truck.add(v(x,0.4,z,Tk));
+// Bed rails
+for(let z=0;z<=5;z++){truck.add(v(-1.6,1.4,z,Tb));truck.add(v(1.6,1.4,z,Tb))}
+// Rear bumper
+for(let x=-1.5;x<=1.5;x++)truck.add(v(x,0.5,5.2,Tk));
+// Wheels (dual rear wheels)
+function wh(x,y,z){const w=v(x,y,z,Tw);w.scale.set(0.5,0.5,0.5);truck.add(w)}
+wh(-1.3,0.3,-2.2);wh(1.3,0.3,-2.2);
+wh(-1.3,0.3,2.5);wh(-0.7,0.3,2.5);wh(0.7,0.3,2.5);wh(1.3,0.3,2.5);
+// InstaBuilt logo on cab
+truck.add(v(0,2.7,-0.1,new T.MeshLambertMaterial({color:'#fff'})));
+truck.add(v(0,1.7,-0.1,new T.MeshLambertMaterial({color:'#3B9B55'})));
+// Beacon light on roof
+truck.add(v(0,4.2,-2,new T.MeshLambertMaterial({color:'#ffaa00',emissive:new T.Color('#ff8800'),emissiveIntensity:0.5})));
+truck.position.set(HQX,0.5,HQZ-8);truck.children.forEach(c=>{c.castShadow=true});S.add(truck);
+
+function makeHouse(w,d,h,wall,roof){const g=new T.Group();for(let x=-w/2-0.5;x<=w/2+0.5;x++)for(let z=-d/2-0.5;z<=d/2+0.5;z++)g.add(v(x,0.15,z,MT.fd));for(let x=-w/2;x<=w/2;x++)for(let y=1;y<=h;y++){g.add(v(x,y,-d/2,wall));g.add(v(x,y,d/2,wall))}for(let z=-d/2;z<=d/2;z++)for(let y=1;y<=h;y++){g.add(v(-w/2,y,z,wall));g.add(v(w/2,y,z,wall))}for(let x=-w/2;x<=w/2;x++)for(let z=-d/2;z<=d/2;z++)g.add(v(x,0.5,z,MT.fl));const wc2=Math.max(1,Math.floor(w/2));for(let i=0;i<wc2;i++){const wx=-w/2+1.5+i*(w-3)/(wc2-1||1);g.add(v(wx,h-1,-d/2-0.1,MT.wi));g.add(v(wx,2,-d/2-0.1,MT.wi));if(Math.random()<0.6){g.add(v(wx,h-1,d/2+0.1,MT.wi));g.add(v(wx,2,d/2+0.1,MT.wi))}}g.add(v(0,1,-d/2-0.1,MT.dr));g.add(v(0,2,-d/2-0.1,MT.dr));const rm=new T.MeshLambertMaterial({color:roof});for(let x=-w/2-1;x<=w/2+1;x++)for(let z=-d/2-1;z<=d/2+1;z++)g.add(v(x,h+1,z,rm));for(let x=-w/2;x<=w/2;x++){g.add(v(x,h+1.5,-d/2-0.5,rm));g.add(v(x,h+1.5,d/2+0.5,rm))}for(let z=-d/2;z<=d/2;z++){g.add(v(-w/2-0.5,h+1.5,z,rm));g.add(v(w/2+0.5,h+1.5,z,rm))}if(w>=4)for(let x=-w/2;x<=w/2;x++)g.add(v(x,0.5,-d/2-1,MT.tr));g.children.forEach(c=>{c.castShadow=true;c.receiveShadow=true});return g}
+function makeFoundation(w,d){const g=new T.Group();for(let x=-w/2-1;x<=w/2+1;x++)for(let z=-d/2-1;z<=d/2+1;z++){const b=v(x,0.2,z,MT.fd);b.userData={isF:true};g.add(b)}return g}
+const catalog=[{w:3,d:3,h:2,wall:MT.wa,roof:'#c44a4a',pay:200},{w:3,d:3,h:2,wall:MT.wb,roof:'#8b4513',pay:220},{w:5,d:3,h:2,wall:MT.wa,roof:'#a0522d',pay:350},{w:5,d:3,h:2,wall:MT.wc,roof:'#555',pay:380},{w:6,d:4,h:3,wall:MT.wa,roof:'#6b3a2a',pay:600},{w:3,d:2,h:2,wall:MT.wb,roof:'#c44a4a',pay:180},{w:5,d:4,h:3,wall:MT.wa,roof:'#8b4513',pay:500}];
+
+let money=0,nb=0,sl=1,pl=1,hasH=false,ch=null,particles=[],batchHouses=[],batchFoundations=[],deliveredHouses=new Set(),usedFoundations=new Set(),batchDelivered=0,batchSize=4;
+const keys={w:0,a:0,s:0,d:0,sh:0};
+function getPay(){return 200+(pl-1)*100}function getSpd(){return 10+(sl-1)*2.5}
+function spawnBatch(){
+ batchHouses.forEach(h=>{if(h)S.remove(h)});batchFoundations.forEach(f=>{if(f)S.remove(f)});
+ batchHouses=[];batchFoundations=[];deliveredHouses=new Set();usedFoundations=new Set();batchDelivered=0;batchSize=4+Math.floor(nb/3);if(batchSize>8)batchSize=8;
+ const atHQ=Math.max(1,Math.floor(batchSize*0.7));
+ for(let i=0;i<batchSize;i++){const e=catalog[Math.floor(Math.random()*Math.min(catalog.length,3+nb))];let hx,hz,fx,fz;
+  if(i<atHQ){const bay=yardBays[Math.floor(Math.random()*yardBays.length)];hx=bay.x;hz=bay.z}else{do{hx=(Math.random()-0.5)*150;hz=(Math.random()-0.5)*90}while(Math.abs(hz-8)<6||Math.abs(hz+8)<6||Math.abs(hz-22)<6||Math.abs(hz+22)<6)}
+  do{fx=(Math.random()-0.5)*130;fz=(Math.random()-0.5)*80}while(Math.abs(fz-8)<6||Math.abs(fz+8)<6||Math.abs(fz-22)<6||Math.abs(fz+22)<6);
+  const ho=makeHouse(e.w,e.d,e.h,e.wall,e.roof);ho.position.set(hx,0.3,hz);S.add(ho);
+  const fo=makeFoundation(e.w,e.d);fo.position.set(fx,0.1,fz);S.add(fo);gl(ho,true);gl(fo,false,true);
+  batchHouses.push(ho);batchFoundations.push(fo);
+ }updDots();updObj();
 }
-resize();
-window.addEventListener('resize',resize);
+function gl(obj,house,fnd){obj.children.forEach(c=>{if(house&&c.material.emissive){c.material.emissive=new T.Color('#553300');c.material.emissiveIntensity=0.5}if(fnd&&c.userData&&c.userData.isF)c.material=MT.fg})}
+function dust(x,y,z,n){for(let i=0;i<(n||12);i++){const s=new T.SphereGeometry(0.08,3,3),m=new T.MeshBasicMaterial({color:'#ccb999'}),p=new T.Mesh(s,m);p.position.set(x,y,z);p.userData={vx:(Math.random()-0.5)*2,vy:Math.random()*3+1,vz:(Math.random()-0.5)*2,life:0.6+Math.random()*0.4};S.add(p);particles.push(p)}}
+let actx=null;function beep(f,d,v,t){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext);const o=actx.createOscillator(),g=actx.createGain();o.type=t||'triangle';o.frequency.value=f;g.gain.setValueAtTime(v||0.05,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+d);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+d)}
+function getNearest(arr){let best=null,bd=1e9;for(const o of arr){const d=truck.position.distanceTo(o.position);if(d<bd){bd=d;best=o}}return{obj:best,dist:bd}}
 
-// Particle grid background
-var pts=[];
-for(var i=0;i<60;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*0.3,vy:(Math.random()-.5)*0.3,r:Math.random()*1.5+.5});
-
-function draw(){
-  ctx.fillStyle='#0a0a0a';
-  ctx.fillRect(0,0,W,H);
-  
-  // Particles
-  for(var i=0;i<pts.length;i++){
-    var p=pts[i];
-    p.x+=p.vx;p.y+=p.vy;
-    if(p.x<0)p.x=W;if(p.x>W)p.x=0;
-    if(p.y<0)p.y=H;if(p.y>H)p.y=0;
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle='rgba(59,155,85,'+(p.r/6)+')';
-    ctx.fill();
-  }
-  // Connections
-  for(var j=0;j<pts.length;j++){
-    for(var k=j+1;k<pts.length;k++){
-      var dx=pts[j].x-pts[k].x,dy=pts[j].y-pts[k].y;
-      var dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<120){
-        ctx.beginPath();
-        ctx.moveTo(pts[j].x,pts[j].y);
-        ctx.lineTo(pts[k].x,pts[k].y);
-        ctx.strokeStyle='rgba(59,155,85,'+(0.04*(1-dist/120))+')';
-        ctx.lineWidth=0.3;
-        ctx.stroke();
-      }
-    }
-  }
-  
-  // Center text
-  var time=Date.now()*0.001;
-  var alpha=0.5+Math.sin(time)*0.15;
-  ctx.fillStyle='rgba(255,255,255,'+alpha+')';
-  ctx.font='bold 28px Inter,-apple-system,sans-serif';
-  ctx.textAlign='center';
-  ctx.fillText('🏗️ Game Loading...',W/2,H/2);
-  ctx.font='13px Inter,-apple-system,sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.3)';
-  ctx.fillText('Step by step — we\'ll build this together',W/2,H/2+36);
-  ctx.textAlign='start';
-  
-  requestAnimationFrame(draw);
+function interact(){
+ const availHouses=batchHouses.filter(h=>!deliveredHouses.has(h)&&h!==ch);
+ const availFounds=batchFoundations.filter(f=>!usedFoundations.has(f));
+ const hp=getNearest(availHouses);
+ const fp=getNearest(availFounds);
+ if(!hasH&&hp.obj&&hp.dist<5.5){hasH=true;ch=hp.obj;ch.children.forEach(c=>{if(c.material.emissive)c.material.emissiveIntensity=0});dust(hp.obj.position.x,hp.obj.position.y,hp.obj.position.z);beep(150,0.2,0.06,'sine');setTimeout(()=>beep(250,0.15,0.06,'sine'),100);updObj()}
+ else if(hasH&&ch&&fp.obj&&fp.dist<5.5){const h=ch,f=fp.obj;ch.position.copy(f.position);ch.position.y=0.3;f.children.forEach(c=>{if(c.userData&&c.userData.isF)c.material=MT.fd});deliveredHouses.add(h);usedFoundations.add(f);hasH=false;ch=null;batchDelivered++;dust(f.position.x,f.position.y,f.position.z);beep(600,0.08,0.07);setTimeout(()=>beep(900,0.1,0.08),60);if(batchDelivered>=batchSize){completeBatch()}else{updDots();updObj()}}
 }
-draw();
-})();
-</script>
-</body>
-</html>
+function completeBatch(){nb++;const bonus=getPay()*batchSize*1.5;money+=bonus;document.getElementById('money').textContent='$'+money;document.getElementById('nb').textContent=nb;document.getElementById('rating').textContent=nb<3?'★':nb<8?'★★':nb<18?'★★★':nb<35?'★★★★':'★★★★★';for(let i=0;i<80;i++){const s=new T.SphereGeometry(0.15,3,3),m=new T.MeshBasicMaterial({color:i%3?'#ffd700':'#fff'}),p=new T.Mesh(s,m);p.position.copy(batchFoundations[0].position);p.position.y+=2;p.userData={vx:(Math.random()-0.5)*8,vy:Math.random()*8+3,vz:(Math.random()-0.5)*8,life:1.2+Math.random()*0.6};S.add(p);particles.push(p)}const el=document.createElement('div');el.className='mp';el.textContent='🏘️ +$'+Math.floor(bonus);el.style.left='35%';el.style.top='30%';el.style.fontSize='28px';document.getElementById('ui').appendChild(el);setTimeout(()=>el.remove(),1500);beep(523,0.1,0.08);setTimeout(()=>beep(659,0.1,0.08),100);setTimeout(()=>beep(784,0.15,0.1),200);setTimeout(()=>beep(1047,0.2,0.1),350);document.getElementById('obj').textContent='🏘️ NEIGHBORHOOD COMPLETE! +$'+Math.floor(bonus);document.getElementById('hint').style.display='none';setTimeout(spawnBatch,2000);updShop()}
+function updDots(){const bd=document.getElementById('batch');bd.innerHTML='';for(let i=0;i<batchSize;i++){const d=document.createElement('div');d.className='dot'+(i<batchDelivered?' done':'');bd.appendChild(d)}}
+function updObj(){const el=document.getElementById('obj'),h=document.getElementById('hint');el.textContent=hasH?'🏗️ Deliver to a foundation! ('+batchDelivered+'/'+batchSize+')':'🚚 Pick up a house! ('+batchDelivered+'/'+batchSize+')';h.textContent=hasH?'Press E to place':'Press E to pick up';h.style.display='block'}
+function updShop(){['s','p'].forEach((k,i)=>{const c=[500,500][i]*([sl,pl][i]);document.getElementById('c'+k).textContent='$'+c;document.getElementById('l'+k).textContent=[sl,pl][i];document.getElementById('u'+k).disabled=money<c})}
+window.buy=function(t){const costs={speed:sl*500,pay:pl*500};const c=costs[t];if(money<c)return;money-=c;if(t==='speed')sl++;if(t==='pay')pl++;document.getElementById('money').textContent='$'+money;updShop();beep(1000,0.1,0.07)};updShop();
+
+document.addEventListener('keydown',e=>{if(e.key==='w'||e.key==='W')keys.w=1;if(e.key==='a'||e.key==='A')keys.a=1;if(e.key==='s'||e.key==='S')keys.s=1;if(e.key==='d'||e.key==='D')keys.d=1;if(e.key==='Shift')keys.sh=1;if(e.key==='e'||e.key==='E')interact()});
+document.addEventListener('keyup',e=>{if(e.key==='w'||e.key==='W')keys.w=0;if(e.key==='a'||e.key==='A')keys.a=0;if(e.key==='s'||e.key==='S')keys.s=0;if(e.key==='d'||e.key==='D')keys.d=0;if(e.key==='Shift')keys.sh=0});
+
+let cy=0,cp=0.45,ty=0,tp=0.45,md=0;
+document.addEventListener('mousedown',e=>{if(e.button===0)md=1});document.addEventListener('mouseup',()=>md=0);
+document.addEventListener('mousemove',e=>{if(md){ty-=e.movementX*0.004;tp=Math.max(-0.2,Math.min(1.1,tp-e.movementY*0.004))}});
+document.addEventListener('wheel',e=>{C.position.y=Math.max(8,Math.min(40,C.position.y+e.deltaY*0.03))});
+
+const mm=document.getElementById('mmc'),mx=mm.getContext('2d');
+function drawMM(){mx.clearRect(0,0,120,120);mx.fillStyle='rgba(0,0,0,0.4)';mx.fillRect(0,0,120,120);mx.fillStyle='#555';mx.fillRect(0,38,120,4);mx.fillRect(0,66,120,4);mx.fillRect(38,0,4,120);mx.fillRect(66,0,4,120);mx.fillStyle='#3B9B55';mx.beginPath();mx.arc(60+truck.position.x*0.35,60-truck.position.z*0.45,3,0,Math.PI*2);mx.fill();batchHouses.forEach(h=>{if(h&&!deliveredHouses.has(h)){mx.fillStyle=(hasH&&ch===h)?'#ff0':'#fa0';mx.beginPath();mx.arc(60+h.position.x*0.35,60-h.position.z*0.45,2,0,Math.PI*2);mx.fill()}});batchFoundations.forEach(f=>{if(f&&!usedFoundations.has(f)){mx.fillStyle='#3B9B55';mx.beginPath();mx.arc(60+f.position.x*0.35,60-f.position.z*0.45,2,0,Math.PI*2);mx.fill()}})}
+
+let lt=0,ds=0;
+function tick(dt){
+ if(dt>0.1)dt=0.1;const sp=getSpd()*(keys.sh?1.7:1);let mx2=0,mz=0;
+ if(keys.w)mz-=1;if(keys.s)mz+=1;if(keys.a)mx2-=1;if(keys.d)mx2+=1;
+ if(mx2||mz){const l=Math.sqrt(mx2*mx2+mz*mz);mx2/=l;mz/=l;const a=Math.atan2(mx2,mz)+cy;truck.position.x+=Math.sin(a)*sp*dt;truck.position.z+=Math.cos(a)*sp*dt;truck.rotation.y=-a+Math.PI;ds+=dt;if(ds>0.25){beep(60,0.04,0.015);ds=0}}
+ truck.position.x=Math.max(-95,Math.min(95,truck.position.x));truck.position.z=Math.max(-55,Math.min(55,truck.position.z));
+ if(hasH&&ch){ch.position.x+=(truck.position.x-ch.position.x)*4*dt;ch.position.z+=(truck.position.z-ch.position.z)*4*dt;ch.position.y=truck.position.y+4}
+ for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.userData.life-=dt;if(p.userData.life<=0){S.remove(p);particles.splice(i,1);continue}p.position.x+=p.userData.vx*dt;p.position.y+=p.userData.vy*dt;p.position.z+=p.userData.vz*dt;p.userData.vy-=6*dt;p.scale.setScalar(Math.max(0,p.userData.life))}
+}
+function frame(t){requestAnimationFrame(frame);const dt=Math.min((t-lt)/1000,0.1);lt=t;tick(dt);cy+=(ty-cy)*6*dt;cp+=(tp-cp)*6*dt;const cx=truck.position.x+Math.sin(cy)*16,cz=truck.position.z+Math.cos(cy)*16;C.position.x+=(cx-C.position.x)*4*dt;C.position.z+=(cz-C.position.z)*4*dt;C.position.y+=(truck.position.y+12+Math.sin(cp)*12-C.position.y)*4*dt;C.lookAt(truck.position.x,truck.position.y+1,truck.position.z);drawMM();R.render(S,C)}
+
+spawnBatch();requestAnimationFrame(frame);
+window.addEventListener('resize',()=>{C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix();R.setSize(innerWidth,innerHeight)});
+</script></body></html>
