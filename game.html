@@ -312,14 +312,11 @@ function drawMM(){mx.clearRect(0,0,120,120);mx.fillStyle='rgba(0,0,0,0.4)';mx.fi
 
 let lt=0,ds=0,vx=0,vz=0;
 function tick(dt){
- if(dt>0.05)dt=0.05;playMusic(dt);const sp=getSpd()*(keys.sh?1.7:1);let mx2=0,mz=0;
- if(keys.w)mz-=1;if(keys.s)mz+=1;if(keys.a)mx2-=1;if(keys.d)mx2+=1;
- // Smooth acceleration/deceleration
- if(mx2||mz){const l=Math.sqrt(mx2*mx2+mz*mz);mx2/=l;mz/=l;const a=Math.atan2(mx2,mz)+cy;vx+=(Math.sin(a)*sp-vx)*4*dt;vz+=(Math.cos(a)*sp-vz)*4*dt}else{vx+=(0-vx)*3*dt;vz+=(0-vz)*3*dt}
+ if(dt>0.05)dt=0.05;playMusic(dt);const sp=getSpd()*(keys.sh?1.7:1);let mx2=0,mz2=0;
+ if(keys.w)mz2-=1;if(keys.s)mz2+=1;if(keys.a)mx2-=1;if(keys.d)mx2+=1;
+ if(mx2||mz2){const l=Math.sqrt(mx2*mx2+mz2*mz2);mx2/=l;mz2/=l;vx+=(mx2*sp-vx)*6*dt;vz+=(mz2*sp-vz)*6*dt}else{vx+=(0-vx)*4*dt;vz+=(0-vz)*4*dt}
  truck.position.x+=vx*dt;truck.position.z+=vz*dt;
- // Smooth rotation
- const targetRot=-Math.atan2(vx,vz);let diff=targetRot-truck.rotation.y;while(diff>Math.PI)diff-=Math.PI*2;while(diff<-Math.PI)diff+=Math.PI*2;truck.rotation.y+=diff*5*dt;
- if(Math.abs(vx)>0.3||Math.abs(vz)>0.3){ds+=dt;const sp=Math.sqrt(vx*vx+vz*vz);if(ds>0.25){sfx.engine(sp/15);ds=0}}
+ if(Math.abs(vx)>0.2||Math.abs(vz)>0.2){const targetRot=-Math.atan2(mx2||vx,mz2||vz);let diff=targetRot-truck.rotation.y;while(diff>Math.PI)diff-=Math.PI*2;while(diff<-Math.PI)diff+=Math.PI*2;truck.rotation.y+=diff*10*dt;ds+=dt;const sp2=Math.sqrt(vx*vx+vz*vz);if(ds>0.3){sfx.engine(sp2/15);ds=0}}
  truck.position.x=Math.max(-90,Math.min(90,truck.position.x));truck.position.z=Math.max(-50,Math.min(50,truck.position.z));
  if(hasH&&ch){ch.position.x+=(truck.position.x-ch.position.x)*8*dt;ch.position.z+=(truck.position.z-ch.position.z)*8*dt;ch.position.y+=(truck.position.y+5-ch.position.y)*8*dt;deliveryTimer+=dt;document.getElementById('timer').textContent=Math.floor(deliveryTimer)+'s'}
  // Arrow pointer to nearest target
