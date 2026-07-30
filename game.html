@@ -19,39 +19,58 @@ canvas{display:block}
 #batch{position:absolute;top:60px;left:50%;transform:translateX(-50%);display:flex;gap:4px}
 .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all .3s}.dot.done{background:#3B9B55;box-shadow:0 0 8px rgba(59,155,85,0.6)}
 #mm{position:absolute;bottom:14px;left:14px;width:120px;height:120px;border-radius:50%;background:rgba(0,0,0,0.45);border:2px solid rgba(255,255,255,0.2)}
+#vignette{position:fixed;inset:0;pointer-events:none;z-index:5;background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,0.25) 100%)}
+#achieve{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:50;pointer-events:none;text-align:center;opacity:0;transition:all .4s}
+#achieve.show{opacity:1;animation:achPop .4s ease,achStay 2s .4s,achOut .4s 2.4s}
+#achieve .achIcon{font-size:40px;display:block}
+#achieve .achTitle{font-size:16px;font-weight:800;color:#ffd700;text-shadow:0 0 10px rgba(255,215,0,0.5);margin:4px 0}
+#achieve .achSub{font-size:11px;color:#ccc}
+@keyframes achPop{0%{transform:translate(-50%,-50%) scale(0.5);opacity:0}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@keyframes achStay{0%,100%{opacity:1}}
+@keyframes achOut{0%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%)}}
 </style></head><body>
+<div id="vignette"></div>
+<div id="achieve"><span class="achIcon"></span><div class="achTitle"></div><div class="achSub"></div></div>
 <div id="ui">
 <div id="obj">🚚 Drive to a glowing house!</div><div id="batch"></div>
 <div id="hint">Press <b style="background:#ffd700;color:#000;padding:2px 8px;border-radius:4px;margin:0 4px">E</b> to pick up</div>
-<div id="hud"><div class="hi">💰 <span id="money">$0</span></div><div class="hi">🏘️ <span id="nb">0</span> neighborhoods</div><div class="hi">⭐ <span id="rating">★</span></div></div>
+<div id="hud"><div class="hi">💰 <span id="money">$0</span></div><div class="hi">⏱ <span id="timer">0s</span></div><div class="hi">🏘️ <span id="nb">0</span></div><div class="hi">⭐ <span id="rating">★</span></div></div>
 <div id="shop">
 <button class="sb" id="us" onclick="buy('speed')">⚡ Speed <span id="ls">1</span> ($<span id="cs">500</span>)</button>
 <button class="sb" id="up" onclick="buy('pay')">💵 Income <span id="lp">1</span> ($<span id="cp">500</span>)</button>
+<button class="sb" id="uz" onclick="buy('style')">🎨 Truck Style <span id="lz">Green</span> ($<span id="cz">300</span>)</button>
 </div><canvas id="mmc" width="120" height="120"></canvas></div>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
 <script type="module">
 import*as T from'three';
-const S=new T.Scene();S.background=new T.Color('#a8dcee');S.fog=new T.Fog('#b8ddf0',150,360);
-const C=new T.PerspectiveCamera(55,innerWidth/innerHeight,0.5,300);C.position.set(-70,14,10);
-const R=new T.WebGLRenderer({antialias:true});R.setSize(innerWidth,innerHeight);R.setPixelRatio(Math.min(devicePixelRatio,1.5));
-R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.1;
+const S=new T.Scene();S.background=new T.Color('#6dbde0');S.fog=new T.Fog('#a8d4e8',80,280);
+const C=new T.PerspectiveCamera(55,innerWidth/innerHeight,0.5,300);C.position.set(-70,30,25);
+const R=new T.WebGLRenderer({antialias:true});R.setSize(innerWidth,innerHeight);R.setPixelRatio(Math.min(devicePixelRatio,1.25));
+R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.2;R.sortObjects=true;R.outputColorSpace=T.SRGBColorSpace;
+
+// CSS color grade overlay
+const style=document.createElement('style');style.textContent='#grade{position:fixed;inset:0;pointer-events:none;z-index:4;mix-blend-mode:overlay;background:linear-gradient(180deg,rgba(60,120,180,0.06) 0%,rgba(40,80,60,0.04) 50%,rgba(30,40,30,0.06) 100%)}';document.head.appendChild(style);
+const gradeEl=document.createElement('div');gradeEl.id='grade';document.body.insertBefore(gradeEl,document.body.firstChild);
 document.body.appendChild(R.domElement);
-const sun=new T.DirectionalLight('#fff8e8',4.5);sun.position.set(70,85,60);sun.castShadow=true;
-sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.near=1;sun.shadow.camera.far=350;
-sun.shadow.camera.left=-120;sun.shadow.camera.right=120;sun.shadow.camera.top=120;sun.shadow.camera.bottom=-120;
-S.add(sun);S.add(new T.AmbientLight('#d0e4f2',2.2));S.add(new T.HemisphereLight('#b0d4ec','#7a8e3a',0.8));
-const ground=new T.Mesh(new T.PlaneGeometry(350,350),new T.MeshLambertMaterial({color:'#6dae3a'}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;S.add(ground);
+const sun=new T.DirectionalLight('#fff3d8',4);sun.position.set(65,80,55);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.near=1;sun.shadow.camera.far=280;
+sun.shadow.camera.left=-90;sun.shadow.camera.right=90;sun.shadow.camera.top=90;sun.shadow.camera.bottom=-90;sun.shadow.bias=-0.0004;
+S.add(sun);S.add(new T.AmbientLight('#e6ecf2',3));S.add(new T.HemisphereLight('#c8ddf0','#88a844',1.2));
+const ground=new T.Mesh(new T.PlaneGeometry(350,350),new T.MeshLambertMaterial({color:'#7cb342'}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;S.add(ground);
 
 const B=new T.BoxGeometry(1,1,1);
-const MT={g:new T.MeshLambertMaterial({color:'#6dae3a'}),rd:new T.MeshLambertMaterial({color:'#4a4a4a'}),ln:new T.MeshLambertMaterial({color:'#ffdd44'}),fd:new T.MeshLambertMaterial({color:'#b0b0b0'}),fg:new T.MeshLambertMaterial({color:'#3B9B55',emissive:new T.Color('#2d7a42'),emissiveIntensity:0.4}),wa:new T.MeshLambertMaterial({color:'#f5ecd7'}),wb:new T.MeshLambertMaterial({color:'#e8dcc8'}),wc:new T.MeshLambertMaterial({color:'#f0e4d0'}),wd:new T.MeshLambertMaterial({color:'#c4956a'}),ra:new T.MeshLambertMaterial({color:'#c44a4a'}),rb:new T.MeshLambertMaterial({color:'#8b4513'}),rc:new T.MeshLambertMaterial({color:'#6b3a2a'}),wi:new T.MeshLambertMaterial({color:'#c8e8f8'}),dr:new T.MeshLambertMaterial({color:'#5a3520'}),tr:new T.MeshLambertMaterial({color:'#3B9B55'}),td:new T.MeshLambertMaterial({color:'#2d7a42'}),tb:new T.MeshLambertMaterial({color:'#555'}),wh:new T.MeshLambertMaterial({color:'#1a1a1a'}),rk:new T.MeshLambertMaterial({color:'#7a7a7a'}),bu:new T.MeshLambertMaterial({color:'#4a7a2a'}),fl:new T.MeshLambertMaterial({color:'#c4a882'}),cr:new T.MeshLambertMaterial({color:'#e8e0d5'}),cr2:new T.MeshLambertMaterial({color:'#f5f0e8'}),pk:new T.MeshLambertMaterial({color:'#3a3a3a'}),gls:new T.MeshLambertMaterial({color:'#c8e0f0',transparent:true,opacity:0.6})};
+const MT={g:new T.MeshLambertMaterial({color:'#6dae3a'}),rd:new T.MeshLambertMaterial({color:'#4a4a4a',polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1}),ln:new T.MeshLambertMaterial({color:'#ffdd44',polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1,depthTest:true,depthWrite:false}),fd:new T.MeshLambertMaterial({color:'#b0b0b0'}),fg:new T.MeshLambertMaterial({color:'#3B9B55',emissive:new T.Color('#2d7a42'),emissiveIntensity:0.4}),wa:new T.MeshLambertMaterial({color:'#f5ecd7'}),wb:new T.MeshLambertMaterial({color:'#e8dcc8'}),wc:new T.MeshLambertMaterial({color:'#f0e4d0'}),wd:new T.MeshLambertMaterial({color:'#c4956a'}),ra:new T.MeshLambertMaterial({color:'#c44a4a'}),rb:new T.MeshLambertMaterial({color:'#8b4513'}),rc:new T.MeshLambertMaterial({color:'#6b3a2a'}),wi:new T.MeshLambertMaterial({color:'#c8e8f8'}),dr:new T.MeshLambertMaterial({color:'#5a3520'}),tr:new T.MeshLambertMaterial({color:'#3B9B55',polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1}),td:new T.MeshLambertMaterial({color:'#2d7a42',polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1}),tb:new T.MeshLambertMaterial({color:'#555',polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1}),wh:new T.MeshLambertMaterial({color:'#1a1a1a'}),rk:new T.MeshLambertMaterial({color:'#7a7a7a'}),bu:new T.MeshLambertMaterial({color:'#4a7a2a'}),fl:new T.MeshLambertMaterial({color:'#c4a882'}),cr:new T.MeshLambertMaterial({color:'#e8e0d5'}),cr2:new T.MeshLambertMaterial({color:'#f5f0e8'}),pk:new T.MeshLambertMaterial({color:'#3a3a3a'}),gls:new T.MeshLambertMaterial({color:'#c8e0f0',transparent:true,opacity:0.6})};
 
-function v(x,y,z,m){const o=new T.Mesh(B,m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;return o}
+function v(x,y,z,m){const o=new T.Mesh(B,m);o.position.set(x,y,z);o.castShadow=false;o.receiveShadow=true;return o}
 function a(x,y,z,m){S.add(v(x,y,z,m))}
 
-// Roads
-function rX(z,s,e){for(let x=s;x<=e;x++){a(x,0.08,z,MT.rd);if(Math.abs(x)%12<2)a(x,0.09,z,MT.ln)}}
-rX(8,-100,100);rX(-8,-100,100);rZz(-60,-8,8);rZz(60,-8,8);rX(22,-80,80);rX(-22,-80,80);rZz(40,-8,22);rZz(-40,-8,22);
+// Roads (no lines - clean)
+function rX(z,s,e){for(let x=s;x<=e;x++)a(x,0.08,z,MT.rd)}
 function rZz(x,s,e){for(let z=s;z<=e;z++)a(x,0.08,z,MT.rd)}
+rX(8,-100,100);rX(-8,-100,100);
+rZz(-60,-8,8);rZz(60,-8,8);
+rX(22,-80,80);rX(-22,-80,80);
+rZz(40,-8,22);rZz(-40,-8,22);
 [28,-28,34,-34,48,-48,54,-54,62,-62,70,-70,78,-78].forEach(x=>{for(let z=-8;z<=22;z++)a(x,0.08,z,MT.rd)});
 
 // Trees (simplified)
@@ -81,12 +100,11 @@ const hqS=new T.MeshLambertMaterial({color:'#3B9B55'}),hqW=new T.MeshLambertMate
 for(let x=-4;x<=4;x++)a(HQX+x,5.8,HQZ+6,x===0?hqW:hqS);
 a(HQX-5,5.8,HQZ+6,hqS);a(HQX+5,5.8,HQZ+6,hqS);
 for(let x=-4;x<=4;x++)a(HQX+x,5.8,HQZ-6,x===0?hqW:hqS);
-// Parking
-for(let x=-22;x<=22;x++)for(let z=-12;z<=6;z++){if(Math.abs(z+3)<2&&x%6===0)continue;a(HQX+x,0.15,HQZ+z,MT.pk)}
-for(let x=-20;x<=20;x+=6)for(let z=-10;z<=5;z++)a(HQX+x,0.16,HQZ+z,MT.ln);
-// Yard bays
+// Parking (no lines)
+for(let x=-22;x<=22;x++)for(let z=-12;z<=6;z++)a(HQX+x,0.15,HQZ+z,MT.pk);
+// Yard bays (no lines)
 const yardBays=[];
-for(let row=0;row<3;row++)for(let col=0;col<6;col++){const sx=HQX-20+col*8,sz=HQZ+10+row*8;for(let x=sx-2;x<=sx+2;x++)for(let z=sz-2;z<=sz+2;z++)a(x,0.12,z,new T.MeshLambertMaterial({color:'#5a5a5a'}));a(sx,0.13,sz,MT.ln);a(sx-2,0.13,sz,MT.ln);a(sx+2,0.13,sz,MT.ln);yardBays.push({x:sx,z:sz})}
+for(let row=0;row<3;row++)for(let col=0;col<6;col++){const sx=HQX-20+col*8,sz=HQZ+10+row*8;for(let x=sx-2;x<=sx+2;x++)for(let z=sz-2;z<=sz+2;z++)a(x,0.12,z,new T.MeshLambertMaterial({color:'#5a5a5a'}));yardBays.push({x:sx,z:sz})}
 // Stacks
 for(let s=0;s<5;s++){const sx=HQX-10+s*5;for(let y=0;y<2;y++)for(let dx=0;dx<=2;dx++)for(let dz=0;dz<=2;dz++)a(sx+dx,0.5+y,HQZ-16+dz,MT.wa)}
 // Fence
@@ -97,43 +115,95 @@ for(let x=HQX-30;x<=HQX-24;x++)a(x,0.08,HQZ-18,MT.rd);
 // ==================== DETAILED TRUCK ====================
 const truck=new T.Group();
 const Tb=MT.tr,Td=MT.td,Tk=MT.tb,Tw=MT.wh,Tg=MT.gls;
-// Chassis frame
-for(let x=-1;x<=1;x++)for(let z=-3;z<=5;z++)truck.add(v(x,0.2,z,Tk));
-// Cab body
-for(let x=-1;x<=1;x++)for(let y=0;y<=2;y++)for(let z=-3;z<=-1;z++)truck.add(v(x,y+0.4,z,Tb));
-// Cab roof (slightly raised)
-for(let x=-1;x<=1;x++)for(let z=-3;z<=-1;z++)truck.add(v(x,3.5,z,Td));
-// Windshield
-truck.add(v(0,1.5,-0.6,Tg));truck.add(v(0,2.5,-0.6,Tg));
+const hlt=new T.MeshLambertMaterial({color:'#ffeedd',emissive:new T.Color('#ffeecc'),emissiveIntensity:0.3});
+const chrome=new T.MeshLambertMaterial({color:'#ccc'});
+const whl=function(x,y,z,s){const w=v(x,y,z,Tw);w.scale.set(s||0.5,s||0.5,s||0.5);truck.add(w);w.castShadow=true};
+// Frame rails
+for(let x=-1;x<=1;x+=2)for(let z=-3;z<=7;z++)truck.add(v(x,0.15,z,Tk));
+// Cab - wider, taller
+for(let x=-1.5;x<=1.5;x++)for(let y=0;y<=2;y++)for(let z=-4;z<=-1;z++){
+ if(x===-1.5&&(z===-4||z===-1))continue; // Round front corners
+ if(x===1.5&&(z===-4||z===-1))continue;  // Round front corners
+ truck.add(v(x,y+0.5,z,Tb))}
+// Cab roof (slightly inset)
+for(let x=-1;x<=1;x++)for(let z=-4;z<=-1;z++)truck.add(v(x,3.6,z,Td));
+// Windshield (angled look - 2 rows)
+truck.add(v(-1,1.6,-0.6,Tg));truck.add(v(0,1.6,-0.6,Tg));truck.add(v(1,1.6,-0.6,Tg));
+truck.add(v(0,2.6,-0.6,Tg));
+// Side windows
+truck.add(v(-1.6,2.1,-2.5,Tg));truck.add(v(1.6,2.1,-2.5,Tg));
+// Grille
+truck.add(v(-1,1.1,-4.1,chrome));truck.add(v(0,1.1,-4.1,chrome));truck.add(v(1,1.1,-4.1,chrome));
+truck.add(v(-1,2.1,-4.1,chrome));truck.add(v(0,2.1,-4.1,chrome));truck.add(v(1,2.1,-4.1,chrome));
 // Headlights
-truck.add(v(-0.5,1,-3.1,new T.MeshLambertMaterial({color:'#ffeedd',emissive:new T.Color('#ffeecc'),emissiveIntensity:0.3})));
-truck.add(v(0.5,1,-3.1,new T.MeshLambertMaterial({color:'#ffeedd',emissive:new T.Color('#ffeecc'),emissiveIntensity:0.3})));
-// Side mirrors
-truck.add(v(-1.5,2.5,-1.5,Tk));truck.add(v(1.5,2.5,-1.5,Tk));
-// Exhaust pipe
-truck.add(v(-1,0.6,3,Tk));truck.add(v(-1,0.6,4,Tk));
-// Flatbed platform
-for(let x=-1.5;x<=1.5;x++)for(let z=0;z<=5;z++)truck.add(v(x,0.4,z,Tk));
-// Bed rails
-for(let z=0;z<=5;z++){truck.add(v(-1.6,1.4,z,Tb));truck.add(v(1.6,1.4,z,Tb))}
-// Rear bumper
-for(let x=-1.5;x<=1.5;x++)truck.add(v(x,0.5,5.2,Tk));
-// Wheels (dual rear wheels)
-function wh(x,y,z){const w=v(x,y,z,Tw);w.scale.set(0.5,0.5,0.5);truck.add(w)}
-wh(-1.3,0.3,-2.2);wh(1.3,0.3,-2.2);
-wh(-1.3,0.3,2.5);wh(-0.7,0.3,2.5);wh(0.7,0.3,2.5);wh(1.3,0.3,2.5);
-// InstaBuilt logo on cab
-truck.add(v(0,2.7,-0.1,new T.MeshLambertMaterial({color:'#fff'})));
-truck.add(v(0,1.7,-0.1,new T.MeshLambertMaterial({color:'#3B9B55'})));
-// Beacon light on roof
-truck.add(v(0,4.2,-2,new T.MeshLambertMaterial({color:'#ffaa00',emissive:new T.Color('#ff8800'),emissiveIntensity:0.5})));
+truck.add(v(-1.3,1.1,-4.1,hlt));truck.add(v(1.3,1.1,-4.1,hlt));
+// Bumper
+for(let x=-1.5;x<=1.5;x++)truck.add(v(x,0.7,-4.3,chrome));
+// Flatbed - longer, wider
+for(let x=-1.5;x<=1.5;x++)for(let z=0;z<=7;z++)truck.add(v(x,0.5,z,Tk));
+// Bed walls
+for(let x=-1.5;x<=1.5;x+=3)for(let y=1;y<=2;y++)for(let z=0;z<=7;z++)truck.add(v(x,y+0.5,z,Tb));
+for(let z=0;z<=7;z+=7)for(let x=-1.5;x<=1.5;x++)for(let y=1;y<=2;y++)truck.add(v(x,y+0.5,z,Tb));
+// Wheel arches (cutouts in bed sides)
+// Front wheels
+whl(-1.5,0.35,-3,0.55);whl(1.5,0.35,-3,0.55);
+// Rear duals  
+whl(-1.5,0.35,3,0.55);whl(-0.9,0.35,3,0.55);whl(0.9,0.35,3,0.55);whl(1.5,0.35,3,0.55);
+whl(-1.5,0.35,6,0.55);whl(-0.9,0.35,6,0.55);whl(0.9,0.35,6,0.55);whl(1.5,0.35,6,0.55);
+// InstaBuilt logo
+truck.add(v(0,2,-0.1,new T.MeshLambertMaterial({color:'#fff'})));
+truck.add(v(0,3,-0.1,new T.MeshLambertMaterial({color:'#3B9B55'})));
+// Roof beacon
+truck.add(v(0,4.4,-2.5,new T.MeshLambertMaterial({color:'#ffaa00',emissive:new T.Color('#ff8800'),emissiveIntensity:0.5})));
+// Mudflaps rear
+truck.add(v(-1.2,0.5,7.5,Tk));truck.add(v(1.2,0.5,7.5,Tk));
 truck.position.set(HQX,0.5,HQZ-8);truck.children.forEach(c=>{c.castShadow=true});S.add(truck);
 
-function makeHouse(w,d,h,wall,roof){const g=new T.Group();for(let x=-w/2-0.5;x<=w/2+0.5;x++)for(let z=-d/2-0.5;z<=d/2+0.5;z++)g.add(v(x,0.15,z,MT.fd));for(let x=-w/2;x<=w/2;x++)for(let y=1;y<=h;y++){g.add(v(x,y,-d/2,wall));g.add(v(x,y,d/2,wall))}for(let z=-d/2;z<=d/2;z++)for(let y=1;y<=h;y++){g.add(v(-w/2,y,z,wall));g.add(v(w/2,y,z,wall))}for(let x=-w/2;x<=w/2;x++)for(let z=-d/2;z<=d/2;z++)g.add(v(x,0.5,z,MT.fl));const wc2=Math.max(1,Math.floor(w/2));for(let i=0;i<wc2;i++){const wx=-w/2+1.5+i*(w-3)/(wc2-1||1);g.add(v(wx,h-1,-d/2-0.1,MT.wi));g.add(v(wx,2,-d/2-0.1,MT.wi));if(Math.random()<0.6){g.add(v(wx,h-1,d/2+0.1,MT.wi));g.add(v(wx,2,d/2+0.1,MT.wi))}}g.add(v(0,1,-d/2-0.1,MT.dr));g.add(v(0,2,-d/2-0.1,MT.dr));const rm=new T.MeshLambertMaterial({color:roof});for(let x=-w/2-1;x<=w/2+1;x++)for(let z=-d/2-1;z<=d/2+1;z++)g.add(v(x,h+1,z,rm));for(let x=-w/2;x<=w/2;x++){g.add(v(x,h+1.5,-d/2-0.5,rm));g.add(v(x,h+1.5,d/2+0.5,rm))}for(let z=-d/2;z<=d/2;z++){g.add(v(-w/2-0.5,h+1.5,z,rm));g.add(v(w/2+0.5,h+1.5,z,rm))}if(w>=4)for(let x=-w/2;x<=w/2;x++)g.add(v(x,0.5,-d/2-1,MT.tr));g.children.forEach(c=>{c.castShadow=true;c.receiveShadow=true});return g}
+function makeHouse(w,d,h,wall,roof){
+ const g=new T.Group(),WM=wall,RF=roof;
+ // Black bottom pad (prevents color bleeding with ground/platforms)
+ const blk=new T.MeshLambertMaterial({color:'#1a1a1a'});
+ for(let x=-w/2-1;x<=w/2+1;x++)for(let z=-d/2-1;z<=d/2+1;z++){const pad=v(x,0.1,z,blk);pad.userData.isPad=true;g.add(pad)}
+ // Concrete foundation pad
+ for(let x=-w/2-0.5;x<=w/2+0.5;x++)for(let z=-d/2-0.5;z<=d/2+0.5;z++)g.add(v(x,0.15,z,MT.fd));
+ // Floor
+ for(let x=-w/2;x<=w/2;x++)for(let z=-d/2;z<=d/2;z++)g.add(v(x,0.5,z,MT.fl));
+ // Walls with trim at corners
+ for(let x=-w/2;x<=w/2;x++)for(let y=1;y<=h;y++){g.add(v(x,y,-d/2,WM));g.add(v(x,y,d/2,WM))}
+ for(let z=-d/2+1;z<=d/2-1;z++)for(let y=1;y<=h;y++){g.add(v(-w/2,y,z,WM));g.add(v(w/2,y,z,WM))}
+ // Corner trim (darker)
+ for(let y=1;y<=h;y++){g.add(v(-w/2,y,-d/2,MT.wd));g.add(v(w/2,y,-d/2,MT.wd));g.add(v(-w/2,y,d/2,MT.wd));g.add(v(w/2,y,d/2,MT.wd))}
+ // Windows with sills
+ const wc2=Math.max(1,Math.floor(w/2));
+ for(let i=0;i<wc2;i++){
+  const wx=-w/2+1.5+i*(w-3)/(wc2-1||1);
+  g.add(v(wx,h-1,-d/2-0.1,MT.wi));g.add(v(wx,2,-d/2-0.1,MT.wi)); // Front windows
+  g.add(v(wx,1,-d/2-0.1,MT.wd)); // Window sill
+  if(Math.random()<0.7){g.add(v(wx,h-1,d/2+0.1,MT.wi));g.add(v(wx,2,d/2+0.1,MT.wi));g.add(v(wx,1,d/2+0.1,MT.wd))}}
+ // Front door with steps
+ g.add(v(0,1,-d/2-0.1,MT.dr));g.add(v(0,2,-d/2-0.1,MT.dr));
+ for(let x=-1;x<=1;x++){g.add(v(x,0.5,-d/2-1,MT.wd));g.add(v(x,0.5,-d/2-2,MT.wd))} // Porch steps
+ // Roof structure
+ const rm=new T.MeshLambertMaterial({color:RF});
+ for(let x=-w/2-1;x<=w/2+1;x++)for(let z=-d/2-1;z<=d/2+1;z++)g.add(v(x,h+1,z,rm));
+ // Gable ends
+ for(let x=-w/2;x<=w/2;x++){g.add(v(x,h+1.5,-d/2-0.5,rm));g.add(v(x,h+1.5,d/2+0.5,rm))}
+ for(let z=-d/2;z<=d/2;z++){g.add(v(-w/2-0.5,h+1.5,z,rm));g.add(v(w/2+0.5,h+1.5,z,rm))}
+ // Chimney
+ const cm=new T.MeshLambertMaterial({color:'#8b4513'});
+ g.add(v(w/2-1,h+1,d/2-2,cm));g.add(v(w/2-1,h+2,d/2-2,cm));g.add(v(w/2-1,h+3,d/2-2,cm));
+ // Porch roof over door
+ if(w>=4){for(let x=-2;x<=2;x++){g.add(v(x,h+0.5,-d/2-1,MT.tr));g.add(v(x,h+1,-d/2-2,MT.wd))}}
+ g.children.forEach(c=>{c.castShadow=true;c.receiveShadow=true});return g}
 function makeFoundation(w,d){const g=new T.Group();for(let x=-w/2-1;x<=w/2+1;x++)for(let z=-d/2-1;z<=d/2+1;z++){const b=v(x,0.2,z,MT.fd);b.userData={isF:true};g.add(b)}return g}
 const catalog=[{w:3,d:3,h:2,wall:MT.wa,roof:'#c44a4a',pay:200},{w:3,d:3,h:2,wall:MT.wb,roof:'#8b4513',pay:220},{w:5,d:3,h:2,wall:MT.wa,roof:'#a0522d',pay:350},{w:5,d:3,h:2,wall:MT.wc,roof:'#555',pay:380},{w:6,d:4,h:3,wall:MT.wa,roof:'#6b3a2a',pay:600},{w:3,d:2,h:2,wall:MT.wb,roof:'#c44a4a',pay:180},{w:5,d:4,h:3,wall:MT.wa,roof:'#8b4513',pay:500}];
 
-let money=0,nb=0,sl=1,pl=1,hasH=false,ch=null,particles=[],batchHouses=[],batchFoundations=[],deliveredHouses=new Set(),usedFoundations=new Set(),batchDelivered=0,batchSize=4;
+let money=0,nb=0,sl=1,pl=1,zl=1,hasH=false,ch=null,particles=[],batchHouses=[],batchFoundations=[],deliveredHouses=new Set(),usedFoundations=new Set(),batchDelivered=0,batchSize=4,deliveryTimer=0,animHouse=null,animTarget=null,animProgress=0,totalDeliveries=0,totalMoney=0,achievements=new Set();
+const truckColors=[MT.tr,MT.td,new T.MeshLambertMaterial({color:'#e74c3c'}),new T.MeshLambertMaterial({color:'#d4a017'}),new T.MeshLambertMaterial({color:'#1a5276'}),new T.MeshLambertMaterial({color:'#6c3483'})];
+const truckAccents=[MT.td,MT.tr,new T.MeshLambertMaterial({color:'#c0392b'}),new T.MeshLambertMaterial({color:'#b8860b'}),new T.MeshLambertMaterial({color:'#154360'}),new T.MeshLambertMaterial({color:'#512e5f'})];
+const styleNames=['Green','Red','Gold','Blue','Purple'];
+const arrowGeo=new T.ConeGeometry(0.3,1,4);const arrowMat=new T.MeshBasicMaterial({color:'#ffd700'});
+const arrow=new T.Mesh(arrowGeo,arrowMat);arrow.visible=false;arrow.renderOrder=999;arrow.material.depthTest=false;S.add(arrow);
 const keys={w:0,a:0,s:0,d:0,sh:0};
 function getPay(){return 200+(pl-1)*100}function getSpd(){return 10+(sl-1)*2.5}
 function spawnBatch(){
@@ -150,7 +220,46 @@ function spawnBatch(){
 }
 function gl(obj,house,fnd){obj.children.forEach(c=>{if(house&&c.material.emissive){c.material.emissive=new T.Color('#553300');c.material.emissiveIntensity=0.5}if(fnd&&c.userData&&c.userData.isF)c.material=MT.fg})}
 function dust(x,y,z,n){for(let i=0;i<(n||12);i++){const s=new T.SphereGeometry(0.08,3,3),m=new T.MeshBasicMaterial({color:'#ccb999'}),p=new T.Mesh(s,m);p.position.set(x,y,z);p.userData={vx:(Math.random()-0.5)*2,vy:Math.random()*3+1,vz:(Math.random()-0.5)*2,life:0.6+Math.random()*0.4};S.add(p);particles.push(p)}}
-let actx=null;function beep(f,d,v,t){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext);const o=actx.createOscillator(),g=actx.createGain();o.type=t||'triangle';o.frequency.value=f;g.gain.setValueAtTime(v||0.05,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+d);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+d)}
+let actx=null,musicGain=null,musicOn=false;
+function tone(f,d,v,t,s){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext);const o=actx.createOscillator(),g=actx.createGain();o.type=t||'triangle';o.frequency.setValueAtTime(f,actx.currentTime);s&&o.frequency.exponentialRampToValueAtTime(s,actx.currentTime+d*0.7);g.gain.setValueAtTime((v||0.05)*2.5,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+d);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+d)}
+function noise(d,v){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext);const buf=actx.createBuffer(1,actx.sampleRate*d,actx.sampleRate);const data=buf.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*(1-i/data.length);const src=actx.createBufferSource(),g=actx.createGain();src.buffer=buf;g.gain.setValueAtTime((v||0.03)*2,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+d);src.connect(g);g.connect(actx.destination);src.start()}
+const sfx={
+ pickup(){tone(120,0.25,0.08,'sine',60);noise(0.2,0.04);setTimeout(()=>tone(180,0.2,0.06,'sine'),100)},
+ place(){tone(80,0.2,0.1,'sine');noise(0.25,0.06);setTimeout(()=>tone(60,0.25,0.06,'triangle'),80)},
+ money(){tone(600,0.08,0.08,'sine',900);setTimeout(()=>{tone(800,0.08,0.08,'sine',1200);tone(1000,0.06,0.05,'sine')},50)},
+ complete(){tone(400,0.12,0.1,'sine',600);setTimeout(()=>tone(500,0.12,0.1,'sine',800),80);setTimeout(()=>{tone(600,0.15,0.12,'sine',1000);tone(800,0.1,0.06,'triangle')},160);setTimeout(()=>tone(1000,0.18,0.12,'sine'),250)},
+ click(){tone(800,0.04,0.05,'sine')},
+ buy(){tone(400,0.06,0.06,'sine',800);setTimeout(()=>tone(600,0.06,0.06,'sine',1000),40);setTimeout(()=>tone(1200,0.08,0.07,'triangle'),80)},
+ engine(v){if(Math.random()<v*0.3){tone(50+v*15,0.1,0.008*v,'sawtooth')}}
+};
+// Background music - simple lo-fi loop
+const notes=[262,294,330,349,392,349,330,294,262,330,392,440,392,330,294,262];
+let noteIdx=0,noteTimer=0;
+function playMusic(dt){
+ if(!musicOn)return;
+ if(!actx)actx=new(window.AudioContext||window.webkitAudioContext);
+ noteTimer+=dt;
+ const noteLen=0.4;
+ if(noteTimer>=noteLen){noteTimer-=noteLen;noteIdx=(noteIdx+1)%notes.length;
+  const o=actx.createOscillator(),g=actx.createGain();
+  o.type='sine';o.frequency.value=notes[noteIdx];
+  g.gain.setValueAtTime(0.015,actx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+noteLen*0.9);
+  o.connect(g);g.connect(actx.destination);
+  o.start();o.stop(actx.currentTime+noteLen*0.9);
+  // Bass note every 4 beats
+  if(noteIdx%4===0){
+   const bo=actx.createOscillator(),bg=actx.createGain();
+   bo.type='sine';bo.frequency.value=notes[noteIdx]*0.5;
+   bg.gain.setValueAtTime(0.02,actx.currentTime);
+   bg.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+noteLen*1.5);
+   bo.connect(bg);bg.connect(actx.destination);
+   bo.start();bo.stop(actx.currentTime+noteLen*1.5);
+  }
+ }
+}
+// Start music on first user interaction
+document.addEventListener('keydown',function startMusic(){musicOn=true;document.removeEventListener('keydown',startMusic)},{once:true});
 function getNearest(arr){let best=null,bd=1e9;for(const o of arr){const d=truck.position.distanceTo(o.position);if(d<bd){bd=d;best=o}}return{obj:best,dist:bd}}
 
 function interact(){
@@ -158,14 +267,37 @@ function interact(){
  const availFounds=batchFoundations.filter(f=>!usedFoundations.has(f));
  const hp=getNearest(availHouses);
  const fp=getNearest(availFounds);
- if(!hasH&&hp.obj&&hp.dist<5.5){hasH=true;ch=hp.obj;ch.children.forEach(c=>{if(c.material.emissive)c.material.emissiveIntensity=0});dust(hp.obj.position.x,hp.obj.position.y,hp.obj.position.z);beep(150,0.2,0.06,'sine');setTimeout(()=>beep(250,0.15,0.06,'sine'),100);updObj()}
- else if(hasH&&ch&&fp.obj&&fp.dist<5.5){const h=ch,f=fp.obj;ch.position.copy(f.position);ch.position.y=0.3;f.children.forEach(c=>{if(c.userData&&c.userData.isF)c.material=MT.fd});deliveredHouses.add(h);usedFoundations.add(f);hasH=false;ch=null;batchDelivered++;dust(f.position.x,f.position.y,f.position.z);beep(600,0.08,0.07);setTimeout(()=>beep(900,0.1,0.08),60);if(batchDelivered>=batchSize){completeBatch()}else{updDots();updObj()}}
+ if(!hasH&&hp.obj&&hp.dist<5.5){hasH=true;ch=hp.obj;ch.children.forEach(c=>{if(c.material.emissive)c.material.emissiveIntensity=0});dust(hp.obj.position.x,hp.obj.position.y,hp.obj.position.z);sfx.pickup();deliveryTimer=0;updObj()}
+ else if(hasH&&ch&&fp.obj&&fp.dist<5.5){const h=ch,f=fp.obj;animHouse=ch;animTarget=f;animProgress=0;deliveredHouses.add(h);usedFoundations.add(f);hasH=false;ch=null;batchDelivered++;
+  const timeBonus=Math.max(0,Math.floor(100-deliveryTimer*2));const pay=getPay()+timeBonus;money+=pay;document.getElementById('money').textContent='$'+money;
+  const el2=document.createElement('div');el2.className='mp';el2.textContent='+$'+pay+(timeBonus>0?' ⚡':'');el2.style.left=(40+Math.random()*20)+'%';el2.style.top=(35+Math.random()*15)+'%';document.getElementById('ui').appendChild(el2);setTimeout(()=>el2.remove(),1000);
+  sfx.money();updShop();checkAchievements();
+  if(batchDelivered>=batchSize){setTimeout(completeBatch,800)}else{updDots();updObj()}}
 }
-function completeBatch(){nb++;const bonus=getPay()*batchSize*1.5;money+=bonus;document.getElementById('money').textContent='$'+money;document.getElementById('nb').textContent=nb;document.getElementById('rating').textContent=nb<3?'★':nb<8?'★★':nb<18?'★★★':nb<35?'★★★★':'★★★★★';for(let i=0;i<80;i++){const s=new T.SphereGeometry(0.15,3,3),m=new T.MeshBasicMaterial({color:i%3?'#ffd700':'#fff'}),p=new T.Mesh(s,m);p.position.copy(batchFoundations[0].position);p.position.y+=2;p.userData={vx:(Math.random()-0.5)*8,vy:Math.random()*8+3,vz:(Math.random()-0.5)*8,life:1.2+Math.random()*0.6};S.add(p);particles.push(p)}const el=document.createElement('div');el.className='mp';el.textContent='🏘️ +$'+Math.floor(bonus);el.style.left='35%';el.style.top='30%';el.style.fontSize='28px';document.getElementById('ui').appendChild(el);setTimeout(()=>el.remove(),1500);beep(523,0.1,0.08);setTimeout(()=>beep(659,0.1,0.08),100);setTimeout(()=>beep(784,0.15,0.1),200);setTimeout(()=>beep(1047,0.2,0.1),350);document.getElementById('obj').textContent='🏘️ NEIGHBORHOOD COMPLETE! +$'+Math.floor(bonus);document.getElementById('hint').style.display='none';setTimeout(spawnBatch,2000);updShop()}
+function completeBatch(){nb++;const bonus=getPay()*batchSize*1.5;money+=bonus;document.getElementById('money').textContent='$'+money;document.getElementById('nb').textContent=nb;document.getElementById('rating').textContent=nb<3?'★':nb<8?'★★':nb<18?'★★★':nb<35?'★★★★':'★★★★★';for(let i=0;i<80;i++){const s=new T.SphereGeometry(0.15,3,3),m=new T.MeshBasicMaterial({color:i%3?'#ffd700':'#fff'}),p=new T.Mesh(s,m);p.position.copy(batchFoundations[0].position);p.position.y+=2;p.userData={vx:(Math.random()-0.5)*8,vy:Math.random()*8+3,vz:(Math.random()-0.5)*8,life:1.2+Math.random()*0.6};S.add(p);particles.push(p)}const el=document.createElement('div');el.className='mp';el.textContent='🏘️ +$'+Math.floor(bonus);el.style.left='35%';el.style.top='30%';el.style.fontSize='28px';document.getElementById('ui').appendChild(el);setTimeout(()=>el.remove(),1500);sfx.complete();document.getElementById('obj').textContent='🏘️ NEIGHBORHOOD COMPLETE! +$'+Math.floor(bonus);document.getElementById('hint').style.display='none';setTimeout(spawnBatch,2000);updShop()}
 function updDots(){const bd=document.getElementById('batch');bd.innerHTML='';for(let i=0;i<batchSize;i++){const d=document.createElement('div');d.className='dot'+(i<batchDelivered?' done':'');bd.appendChild(d)}}
 function updObj(){const el=document.getElementById('obj'),h=document.getElementById('hint');el.textContent=hasH?'🏗️ Deliver to a foundation! ('+batchDelivered+'/'+batchSize+')':'🚚 Pick up a house! ('+batchDelivered+'/'+batchSize+')';h.textContent=hasH?'Press E to place':'Press E to pick up';h.style.display='block'}
-function updShop(){['s','p'].forEach((k,i)=>{const c=[500,500][i]*([sl,pl][i]);document.getElementById('c'+k).textContent='$'+c;document.getElementById('l'+k).textContent=[sl,pl][i];document.getElementById('u'+k).disabled=money<c})}
-window.buy=function(t){const costs={speed:sl*500,pay:pl*500};const c=costs[t];if(money<c)return;money-=c;if(t==='speed')sl++;if(t==='pay')pl++;document.getElementById('money').textContent='$'+money;updShop();beep(1000,0.1,0.07)};updShop();
+function updShop(){['s','p','z'].forEach((k,i)=>{const c=[500,500,300][i]*([sl,pl,zl][i]);document.getElementById('c'+k).textContent='$'+c;const lv=[sl,pl,zl][i];const dn=['speed','pay','style'];document.getElementById('l'+k).textContent=dn[i]==='style'?styleNames[(zl-1)%styleNames.length]:lv;document.getElementById('u'+k).disabled=money<c})}
+function showAchievement(icon,title,sub){
+ if(achievements.has(title))return;achievements.add(title);
+ const a=document.getElementById('achieve');
+ a.querySelector('.achIcon').textContent=icon;
+ a.querySelector('.achTitle').textContent=title;
+ a.querySelector('.achSub').textContent=sub;
+ a.classList.remove('show');void a.offsetWidth;a.classList.add('show');
+ setTimeout(()=>a.classList.remove('show'),2800);
+}
+function checkAchievements(){
+ totalDeliveries++;totalMoney+=getPay();
+ if(totalDeliveries===1)showAchievement('🏆','First Delivery!','Welcome to InstaBuilt');
+ if(totalDeliveries===5)showAchievement('⭐','5 Houses Delivered','Building a reputation');
+ if(totalDeliveries===10)showAchievement('🌟','10 Houses!','The neighborhood is growing');
+ if(totalDeliveries===25)showAchievement('💫','25 Houses!','A true builder');
+ if(!hasH&&deliveryTimer<12&&deliveryTimer>0.1)showAchievement('⚡','Speed Demon!','Delivered in under 12 seconds');
+ if(totalMoney>=2000&&!achievements.has('Big Spender'))showAchievement('💎','Big Spender!','Earned over $2,000');
+ if(nb>=10)showAchievement('🏘️','Town Builder','10 neighborhoods complete');
+}
+window.buy=function(t){const costs={speed:sl*500,pay:pl*500,style:zl*300};const c=costs[t];if(money<c)return;money-=c;if(t==='speed')sl++;if(t==='pay')pl++;if(t==='style'){zl++;const i=(zl-1)%truckColors.length;const nc=truckColors[i],na=truckAccents[i];truck.children.forEach(c2=>{if(c2.material===MT.tr||c2.material===truckColors[(i+4)%truckColors.length])c2.material=nc;if(c2.material===MT.td||c2.material===truckAccents[(i+4)%truckAccents.length])c2.material=na})}document.getElementById('money').textContent='$'+money;updShop();sfx.buy()};updShop();
 
 document.addEventListener('keydown',e=>{if(e.key==='w'||e.key==='W')keys.w=1;if(e.key==='a'||e.key==='A')keys.a=1;if(e.key==='s'||e.key==='S')keys.s=1;if(e.key==='d'||e.key==='D')keys.d=1;if(e.key==='Shift')keys.sh=1;if(e.key==='e'||e.key==='E')interact()});
 document.addEventListener('keyup',e=>{if(e.key==='w'||e.key==='W')keys.w=0;if(e.key==='a'||e.key==='A')keys.a=0;if(e.key==='s'||e.key==='S')keys.s=0;if(e.key==='d'||e.key==='D')keys.d=0;if(e.key==='Shift')keys.sh=0});
@@ -178,16 +310,26 @@ document.addEventListener('wheel',e=>{C.position.y=Math.max(8,Math.min(40,C.posi
 const mm=document.getElementById('mmc'),mx=mm.getContext('2d');
 function drawMM(){mx.clearRect(0,0,120,120);mx.fillStyle='rgba(0,0,0,0.4)';mx.fillRect(0,0,120,120);mx.fillStyle='#555';mx.fillRect(0,38,120,4);mx.fillRect(0,66,120,4);mx.fillRect(38,0,4,120);mx.fillRect(66,0,4,120);mx.fillStyle='#3B9B55';mx.beginPath();mx.arc(60+truck.position.x*0.35,60-truck.position.z*0.45,3,0,Math.PI*2);mx.fill();batchHouses.forEach(h=>{if(h&&!deliveredHouses.has(h)){mx.fillStyle=(hasH&&ch===h)?'#ff0':'#fa0';mx.beginPath();mx.arc(60+h.position.x*0.35,60-h.position.z*0.45,2,0,Math.PI*2);mx.fill()}});batchFoundations.forEach(f=>{if(f&&!usedFoundations.has(f)){mx.fillStyle='#3B9B55';mx.beginPath();mx.arc(60+f.position.x*0.35,60-f.position.z*0.45,2,0,Math.PI*2);mx.fill()}})}
 
-let lt=0,ds=0;
+let lt=0,ds=0,vx=0,vz=0;
 function tick(dt){
- if(dt>0.1)dt=0.1;const sp=getSpd()*(keys.sh?1.7:1);let mx2=0,mz=0;
+ if(dt>0.05)dt=0.05;playMusic(dt);const sp=getSpd()*(keys.sh?1.7:1);let mx2=0,mz=0;
  if(keys.w)mz-=1;if(keys.s)mz+=1;if(keys.a)mx2-=1;if(keys.d)mx2+=1;
- if(mx2||mz){const l=Math.sqrt(mx2*mx2+mz*mz);mx2/=l;mz/=l;const a=Math.atan2(mx2,mz)+cy;truck.position.x+=Math.sin(a)*sp*dt;truck.position.z+=Math.cos(a)*sp*dt;truck.rotation.y=-a+Math.PI;ds+=dt;if(ds>0.25){beep(60,0.04,0.015);ds=0}}
- truck.position.x=Math.max(-95,Math.min(95,truck.position.x));truck.position.z=Math.max(-55,Math.min(55,truck.position.z));
- if(hasH&&ch){ch.position.x+=(truck.position.x-ch.position.x)*4*dt;ch.position.z+=(truck.position.z-ch.position.z)*4*dt;ch.position.y=truck.position.y+4}
+ // Smooth acceleration/deceleration
+ if(mx2||mz){const l=Math.sqrt(mx2*mx2+mz*mz);mx2/=l;mz/=l;const a=Math.atan2(mx2,mz)+cy;vx+=(Math.sin(a)*sp-vx)*4*dt;vz+=(Math.cos(a)*sp-vz)*4*dt}else{vx+=(0-vx)*3*dt;vz+=(0-vz)*3*dt}
+ truck.position.x+=vx*dt;truck.position.z+=vz*dt;
+ // Smooth rotation
+ const targetRot=-Math.atan2(vx,vz);let diff=targetRot-truck.rotation.y;while(diff>Math.PI)diff-=Math.PI*2;while(diff<-Math.PI)diff+=Math.PI*2;truck.rotation.y+=diff*5*dt;
+ if(Math.abs(vx)>0.3||Math.abs(vz)>0.3){ds+=dt;const sp=Math.sqrt(vx*vx+vz*vz);if(ds>0.25){sfx.engine(sp/15);ds=0}}
+ truck.position.x=Math.max(-90,Math.min(90,truck.position.x));truck.position.z=Math.max(-50,Math.min(50,truck.position.z));
+ if(hasH&&ch){ch.position.x+=(truck.position.x-ch.position.x)*8*dt;ch.position.z+=(truck.position.z-ch.position.z)*8*dt;ch.position.y+=(truck.position.y+5-ch.position.y)*8*dt;deliveryTimer+=dt;document.getElementById('timer').textContent=Math.floor(deliveryTimer)+'s'}
+ // Arrow pointer to nearest target
+ const target=hasH?(batchFoundations.find(f=>!usedFoundations.has(f))):(batchHouses.find(h=>!deliveredHouses.has(h)&&h!==ch));
+ if(target){arrow.visible=true;arrow.position.set(target.position.x,target.position.y+5,target.position.z);arrow.rotation.y=Date.now()*0.003}else{arrow.visible=false}
+ // Placement animation
+ if(animHouse&&animTarget){animProgress+=dt*3;const t2=Math.min(1,animProgress);animHouse.position.copy(animTarget.position);animHouse.position.y=animTarget.position.y+3*(1-t2);if(t2>=1){animHouse.position.y=0.3;animTarget.children.forEach(c=>{if(c.userData&&c.userData.isF)c.material=MT.fd});animHouse.children.forEach(c=>{if(c.userData&&c.userData.isPad)c.material=new T.MeshLambertMaterial({color:'#f0efe8'})});dust(animTarget.position.x,animTarget.position.y,animTarget.position.z);animHouse=null;animTarget=null}}
  for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.userData.life-=dt;if(p.userData.life<=0){S.remove(p);particles.splice(i,1);continue}p.position.x+=p.userData.vx*dt;p.position.y+=p.userData.vy*dt;p.position.z+=p.userData.vz*dt;p.userData.vy-=6*dt;p.scale.setScalar(Math.max(0,p.userData.life))}
 }
-function frame(t){requestAnimationFrame(frame);const dt=Math.min((t-lt)/1000,0.1);lt=t;tick(dt);cy+=(ty-cy)*6*dt;cp+=(tp-cp)*6*dt;const cx=truck.position.x+Math.sin(cy)*16,cz=truck.position.z+Math.cos(cy)*16;C.position.x+=(cx-C.position.x)*4*dt;C.position.z+=(cz-C.position.z)*4*dt;C.position.y+=(truck.position.y+12+Math.sin(cp)*12-C.position.y)*4*dt;C.lookAt(truck.position.x,truck.position.y+1,truck.position.z);drawMM();R.render(S,C)}
+function frame(t){requestAnimationFrame(frame);const dt=Math.min((t-lt)/1000,0.1);lt=t;tick(dt);cy+=(ty-cy)*6*dt;cp+=(tp-cp)*6*dt;const cx=truck.position.x+Math.sin(cy)*16,cz=truck.position.z+Math.cos(cy)*16;C.position.x+=(cx-C.position.x)*4*dt;C.position.z+=(cz-C.position.z)*4*dt;C.position.y+=(truck.position.y+22+Math.sin(cp)*10-C.position.y)*5*dt;C.lookAt(truck.position.x,truck.position.y+1,truck.position.z);drawMM();R.render(S,C)}
 
 spawnBatch();requestAnimationFrame(frame);
 window.addEventListener('resize',()=>{C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix();R.setSize(innerWidth,innerHeight)});
